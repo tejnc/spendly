@@ -6,11 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spendly - Privacy Policy</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -22,92 +18,99 @@
             margin: 0 auto;
         }
 
-        h1 {
-            color: #f5c6a0;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
+        h1 { color: #f5c6a0; font-size: 2rem; margin-bottom: 0.5rem; }
 
         h2 {
-            color: #f5c6a0;
-            font-size: 1.3rem;
-            margin-top: 2rem;
-            margin-bottom: 0.5rem;
-            border-bottom: 1px solid #333;
-            padding-bottom: 0.3rem;
+            color: #f5c6a0; font-size: 1.3rem;
+            margin-top: 2rem; margin-bottom: 0.5rem;
+            border-bottom: 1px solid #333; padding-bottom: 0.3rem;
         }
 
-        p,
-        li {
-            margin-bottom: 0.8rem;
-            color: #c0c0c0;
-        }
+        h3 { color: #ddd; margin-top: 1rem; margin-bottom: 0.4rem; font-size: 1rem; }
 
-        ul {
-            padding-left: 1.5rem;
-        }
+        p, li { margin-bottom: 0.8rem; color: #c0c0c0; }
 
-        a {
-            color: #f5c6a0;
-        }
+        ul { padding-left: 1.5rem; }
 
-        .effective-date {
-            color: #888;
-            font-size: 0.9rem;
-            margin-bottom: 2rem;
-        }
+        a { color: #f5c6a0; }
+
+        .effective-date { color: #888; font-size: 0.9rem; margin-bottom: 2rem; }
 
         .highlight {
             background: #1a1a1a;
             border-left: 3px solid #f5c6a0;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 4px;
+            padding: 1rem; margin: 1rem 0; border-radius: 4px;
         }
+
+        .cloud-note {
+            background: #131a1a;
+            border-left: 3px solid #6ab8b8;
+            padding: 1rem; margin: 1rem 0; border-radius: 4px;
+            color: #aad4d4;
+        }
+
+        nav {
+            position: sticky; top: 0;
+            background: rgba(13, 13, 13, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #2a2a2a;
+            padding: 0.85rem 0;
+            margin-bottom: 2.5rem;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .nav-logo { font-size: 1.1rem; font-weight: 700; color: #f5c6a0; text-decoration: none; }
+        .nav-back { font-size: 0.85rem; color: #888; text-decoration: none; }
+        .nav-back:hover { color: #f5c6a0; }
     </style>
 </head>
 
 <body>
 
+    <nav>
+        <a href="index.html" class="nav-logo">Spendly</a>
+        <a href="index.html" class="nav-back">← Back to home</a>
+    </nav>
+
     <h1>Privacy Policy</h1>
-    <p class="effective-date">Effective Date: February 27, 2026</p>
+    <p class="effective-date">Effective Date: April 21, 2026</p>
 
     <p>Spendly ("we", "our", or "the app") is a personal finance and expense tracking application. Your privacy is
         important to us. This Privacy Policy explains how we handle your information.</p>
 
     <div class="highlight">
-        <strong>Key Point:</strong> Spendly stores all your financial data locally on your device. We do not collect,
-        transmit, or store any of your personal financial information on external servers.
+        <strong>Key Point:</strong> Spendly stores all your core financial data locally on your device. We do not collect,
+        transmit, or store your personal financial information on external servers — except for the optional, opt-in
+        Split Tracker feature which uses cloud sync and is fully isolated from local data.
     </div>
 
     <h2>1. Information We Do NOT Collect</h2>
-    <p>Spendly does not collect:</p>
+    <p>For the core app, Spendly does not collect:</p>
     <ul>
         <li>Your name, email, or contact information</li>
         <li>Your financial data (transactions, account balances, budgets, goals)</li>
         <li>Your location data</li>
         <li>Your personal photos (receipt images are stored locally only)</li>
     </ul>
-    <p>All financial data you enter into the app remains exclusively on your device.</p>
+    <p>All financial data you enter into the core app remains exclusively on your device.</p>
 
     <h2>2. Information Collected by Third-Party Services</h2>
     <p>Spendly uses the following third-party services that may collect certain data:</p>
 
-    <h3 style="color: #ddd; margin-top: 1rem;">Google AdMob (Advertising)</h3>
+    <h3>Google AdMob (Advertising)</h3>
     <p>We display ads through Google AdMob to support the free version of the app. AdMob may collect:</p>
     <ul>
         <li><strong>Advertising ID</strong>: A resettable identifier used to serve relevant ads.</li>
         <li><strong>Device information</strong>: Device model, OS version, screen size for ad formatting.</li>
         <li><strong>IP address</strong>: Used for approximate location-based ad targeting (country/region level).</li>
     </ul>
-    <p>For more details, see <a href="https://policies.google.com/privacy" target="_blank">Google's Privacy Policy</a>.
-    </p>
+    <p>For more details, see <a href="https://policies.google.com/privacy" target="_blank">Google's Privacy Policy</a>.</p>
 
-    <h3 style="color: #ddd; margin-top: 1rem;">Google ML Kit (OCR / Receipt Scanning)</h3>
+    <h3>Google ML Kit (OCR / Receipt Scanning)</h3>
     <p>Spendly uses Google ML Kit for on-device text recognition (OCR) to scan receipts. All OCR processing happens
         <strong>entirely on your device</strong>. No images or text data are sent to Google's servers.</p>
 
-    <h3 style="color: #ddd; margin-top: 1rem;">Groq AI (Text Classification)</h3>
+    <h3>Groq AI (Receipt Text Classification)</h3>
     <p>Spendly uses the Groq AI API to classify scanned receipt text into structured fields such as title, date, amount,
         and notes. When you scan a receipt:</p>
     <ul>
@@ -117,44 +120,62 @@
     </ul>
     <p>For more details, see <a href="https://groq.com/privacy-policy/" target="_blank">Groq's Privacy Policy</a>.</p>
 
+    <h3>Supabase (Split Tracker — Opt-In Cloud Feature)</h3>
+    <div class="cloud-note">
+        <strong>Opt-in only:</strong> The Split Tracker is a fully optional feature. No network connection is opened
+        until you deliberately enable Split Tracker. The core app — transactions, budgets, accounts, goals — remains
+        100% local regardless of whether you use Split Tracker.
+    </div>
+    <p>If you choose to use the Split Tracker, the following data is stored on Supabase (cloud) servers:</p>
+    <ul>
+        <li><strong>Profile information</strong>: Display name, phone number, profession, preferred currency, and bio — only what you choose to enter.</li>
+        <li><strong>Group data</strong>: Group names, member lists, and your membership status.</li>
+        <li><strong>Expense data</strong>: Expense titles, amounts, dates, notes, payer information, and split breakdowns within your groups.</li>
+        <li><strong>Settlements</strong>: Payment records between group members.</li>
+    </ul>
+    <p>This data is shared with other members of your groups so they can see shared expenses and balances. You can
+        leave any group at any time. For more details, see
+        <a href="https://supabase.com/privacy" target="_blank">Supabase's Privacy Policy</a>.</p>
+
     <h2>3. Data Storage</h2>
-    <p>All your financial data is stored locally on your device using an embedded database (Isar). This means:</p>
+    <p>All your core financial data is stored locally on your device using an embedded database (Isar). This means:</p>
     <ul>
         <li>Your data is never uploaded to the cloud.</li>
         <li>Your data is only accessible on the device where the app is installed.</li>
-        <li>If you uninstall the app, your data will be permanently deleted.</li>
+        <li>If you uninstall the app, your local data will be permanently deleted.</li>
     </ul>
+    <p>Split Tracker data is stored on Supabase cloud servers and is subject to Supabase's data retention and deletion policies. Leaving a group removes you from it; contact us to request full account deletion.</p>
 
     <h2>4. Data Security</h2>
     <p>We take the following measures to protect your data:</p>
     <ul>
         <li><strong>Biometric Authentication</strong>: Optional fingerprint/face lock to protect access to the app.</li>
-        <li><strong>Local-Only Storage</strong>: No network transmission of personal data.</li>
-        <li><strong>No User Accounts</strong>: No registration required, eliminating the risk of credential breaches.
-        </li>
+        <li><strong>Smart Lock Grace Period</strong>: Suppresses re-lock when briefly backgrounding for camera or file picker.</li>
+        <li><strong>Local-Only Storage</strong>: No network transmission of core personal financial data.</li>
+        <li><strong>Encrypted Backup</strong>: AES-encrypted JSON exports secured with a user-set PIN.</li>
+        <li><strong>No User Accounts</strong>: Core app requires no registration, eliminating credential breach risk.</li>
     </ul>
 
     <h2>5. Permissions</h2>
     <p>Spendly requests the following device permissions:</p>
     <ul>
         <li><strong>Camera</strong>: To scan receipts using OCR.</li>
-        <li><strong>Storage/Photos</strong>: To save receipt images and export reports.</li>
+        <li><strong>Storage / Photos</strong>: To save receipt images and export reports.</li>
         <li><strong>Biometric</strong>: For optional app lock functionality.</li>
-        <li><strong>Internet</strong>: Required for loading advertisements.</li>
-        <li><strong>Notifications</strong>: For bill reminders and budget alerts.</li>
+        <li><strong>Internet</strong>: Required for loading advertisements and for the optional Split Tracker cloud sync.</li>
+        <li><strong>Notifications</strong>: For bill reminders, budget alerts, and daily logging reminders.</li>
     </ul>
 
     <h2>6. Children's Privacy</h2>
-    <p>Spendly is not directed at children under 13. We do not knowingly collect any personal information from children.
-    </p>
+    <p>Spendly is not directed at children under 13. We do not knowingly collect any personal information from children.</p>
 
     <h2>7. Your Rights</h2>
-    <p>Since all data is stored locally on your device, you have full control:</p>
+    <p>Since core data is stored locally on your device, you have full control:</p>
     <ul>
         <li><strong>Access</strong>: All your data is visible within the app at all times.</li>
         <li><strong>Export</strong>: You can export your data as PDF or CSV from the app.</li>
-        <li><strong>Delete</strong>: You can delete individual transactions, accounts, or all data by clearing app data
-            or uninstalling.</li>
+        <li><strong>Delete (local)</strong>: Delete individual transactions, accounts, or all data by clearing app data or uninstalling.</li>
+        <li><strong>Delete (Split Tracker)</strong>: You can leave any group at any time. To request full deletion of your Split Tracker account and associated data, contact us at the email below.</li>
     </ul>
 
     <h2>8. Changes to This Policy</h2>
@@ -165,9 +186,7 @@
     <p>If you have any questions or concerns about this Privacy Policy, please contact us at:</p>
     <p><strong>Email:</strong> <a href="mailto:tejnarayan15.tnc@gmail.com">tejnarayan15.tnc@gmail.com</a></p>
 
-    <p style="margin-top: 3rem; color: #666; font-size: 0.85rem; text-align: center;">© 2026 Spendly. All rights
-        reserved.</p>
+    <p style="margin-top: 3rem; color: #666; font-size: 0.85rem; text-align: center;">© 2026 Spendly. All rights reserved.</p>
 
 </body>
-
 </html>
