@@ -4,15 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spendly - Personal Finance & Expense Tracker</title>
+    <title>Split Tracker — Spendly</title>
     <meta name="description"
-        content="Track expenses with AI receipt scanning, budgets, split bills & more — all in one privacy-first app. No cloud. No account. Just your money.">
-    <meta property="og:title" content="Spendly - Personal Finance & Expense Tracker">
+        content="Split expenses with friends in real time. Spendly's Split Tracker brings Splitwise-style group expense tracking with live sync — fully isolated from your private local data.">
+    <meta property="og:title" content="Split Tracker — Spendly">
     <meta property="og:description"
-        content="Track expenses with AI receipt scanning, budgets & bills — all in one private app.">
+        content="Real-time group expense splitting with live sync, settlement tracking, and flexible split types — all privacy-isolated from your local finances.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tejnc.github.io/spendly">
-    <link rel="canonical" href="https://tejnc.github.io/spendly">
+    <meta property="og:url" content="https://tejnc.github.io/spendly/feature/split_tracker/">
+    <link rel="canonical" href="https://tejnc.github.io/spendly/feature/split_tracker/">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
@@ -26,6 +26,8 @@
             --salmon-glow:  rgba(224, 139, 106, 0.09);
             --green:        #5DB87A;
             --green-pale:   rgba(93, 184, 122, 0.15);
+            --blue:         #6BA3D6;
+            --blue-pale:    rgba(107, 163, 214, 0.15);
             --bg:           #0e0c0a;
             --bg-card:      #161412;
             --bg-elevated:  #1E1B18;
@@ -60,27 +62,50 @@
             padding: 0 2rem; height: 60px;
             display: flex; align-items: center; justify-content: space-between;
         }
-        .nav-logo { font-size: 1.2rem; font-weight: 700; color: var(--salmon); letter-spacing: -0.03em; }
-        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-logo { font-size: 1.2rem; font-weight: 700; color: var(--salmon); letter-spacing: -0.03em; text-decoration: none; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
         .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
         .nav-links a:hover { color: var(--salmon); }
+        .nav-back {
+            display: inline-flex; align-items: center; gap: 0.35rem;
+            font-size: 0.82rem; color: var(--text-muted);
+            border: 1px solid var(--border); border-radius: 8px;
+            padding: 0.3rem 0.75rem; transition: all 0.2s;
+        }
+        .nav-back:hover { border-color: var(--border-warm); color: var(--salmon) !important; }
 
-        /* ── HERO ── */
+        /* ── GLOW ── */
         .hero-glow {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             pointer-events: none; z-index: 0;
             background:
-                radial-gradient(ellipse 55% 45% at 25% 15%, var(--salmon-glow) 0%, transparent 70%),
-                radial-gradient(ellipse 35% 35% at 75% 85%, rgba(93,184,122,0.05) 0%, transparent 70%);
+                radial-gradient(ellipse 55% 45% at 20% 15%, rgba(224, 139, 106, 0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 35% at 80% 80%, rgba(107,163,214,0.05) 0%, transparent 70%);
         }
 
+        /* ── BREADCRUMB ── */
+        .breadcrumb {
+            position: relative; z-index: 1;
+            padding: 80px 5rem 0;
+            max-width: 1280px; margin: 0 auto;
+        }
+        .breadcrumb-inner {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            font-size: 0.78rem; color: var(--text-muted);
+        }
+        .breadcrumb-inner a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb-inner a:hover { color: var(--salmon); }
+        .breadcrumb-inner span { opacity: 0.4; }
+        .breadcrumb-inner strong { color: var(--salmon); font-weight: 600; }
+
+        /* ── HERO ── */
         .hero {
             min-height: 100vh;
             display: grid;
             grid-template-columns: 1fr 1fr;
             align-items: center;
             gap: 4rem;
-            padding: 100px 5rem 4rem;
+            padding: 40px 5rem 4rem;
             max-width: 1280px;
             margin: 0 auto;
             position: relative;
@@ -159,34 +184,39 @@
         }
         .phone-topbar-title { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
         .phone-topbar-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--salmon); opacity: 0.75; }
-        .phone-balance-card {
-            margin: 14px 13px 12px;
-            background: linear-gradient(135deg, #272320 0%, #1E1B18 100%);
-            border: 1px solid rgba(224,139,106,0.18);
-            border-radius: 16px; padding: 14px;
-        }
-        .phone-balance-label { font-size: 0.58rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
-        .phone-balance-amount { font-size: 1.4rem; font-weight: 700; color: var(--text); letter-spacing: -0.03em; margin-bottom: 10px; }
-        .phone-balance-row { display: flex; gap: 7px; }
-        .phone-balance-pill { flex: 1; border-radius: 10px; padding: 7px 9px; font-size: 0.58rem; font-weight: 600; }
-        .phone-balance-pill.inc { background: rgba(93,184,122,0.18); color: #5DB87A; }
-        .phone-balance-pill.exp { background: rgba(224,139,106,0.18); color: var(--salmon); }
-        .phone-balance-pill span { display: block; font-size: 0.74rem; font-weight: 700; margin-top: 2px; }
-        .phone-txlist { padding: 0 13px; }
-        .phone-tx {
+
+        /* Split Tracker phone mockup components */
+        .phone-st-header {
+            padding: 12px 14px 8px;
             display: flex; align-items: center; justify-content: space-between;
-            padding: 8px 0; border-bottom: 1px solid var(--border);
         }
-        .phone-tx:last-child { border-bottom: none; }
-        .phone-tx-left { display: flex; align-items: center; gap: 8px; }
-        .phone-tx-icon { width: 27px; height: 27px; border-radius: 8px; background: var(--bg-elevated); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; }
-        .phone-tx-name { font-size: 0.7rem; font-weight: 500; color: var(--text); }
-        .phone-tx-cat { font-size: 0.58rem; color: var(--text-muted); }
-        .phone-tx-amount { font-weight: 700; font-size: 0.72rem; }
-        .phone-tx-amount.neg { color: var(--salmon); }
-        .phone-tx-amount.pos { color: var(--green); }
+        .phone-st-title { font-size: 0.78rem; font-weight: 700; color: var(--text); }
+        .phone-st-btn {
+            font-size: 0.56rem; font-weight: 700; background: var(--salmon);
+            color: #0e0c0a; padding: 3px 8px; border-radius: 6px;
+        }
+        .phone-group-card {
+            margin: 4px 13px; border-radius: 12px; padding: 10px 12px;
+            background: var(--bg-elevated); border: 1px solid var(--border);
+            display: flex; align-items: center; gap: 9px;
+        }
+        .phone-group-avatar {
+            width: 30px; height: 30px; border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.85rem; flex-shrink: 0;
+        }
+        .phone-group-info { flex: 1; min-width: 0; }
+        .phone-group-name { font-size: 0.68rem; font-weight: 600; color: var(--text); }
+        .phone-group-meta { font-size: 0.56rem; color: var(--text-muted); margin-top: 1px; }
+        .phone-group-balance {
+            font-size: 0.62rem; font-weight: 700; padding: 2px 6px;
+            border-radius: 5px; flex-shrink: 0;
+        }
+        .phone-group-balance.owe { background: rgba(224,139,106,0.18); color: var(--salmon); }
+        .phone-group-balance.owed { background: rgba(93,184,122,0.18); color: var(--green); }
+        .phone-group-balance.settled { background: rgba(255,255,255,0.07); color: var(--text-muted); }
         .phone-tabbar {
-            margin: 12px 13px 0;
+            margin: 10px 13px 0;
             background: var(--bg-elevated); border-radius: 13px; padding: 7px 10px;
             display: flex; justify-content: space-around; border: 1px solid var(--border);
         }
@@ -200,6 +230,37 @@
         .section-label { font-size: 0.72rem; font-weight: 600; color: var(--salmon); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 0.75rem; }
         .section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.04em; margin-bottom: 1rem; line-height: 1.15; }
         .section-subtitle { font-size: 1rem; color: var(--text-dim); max-width: 520px; line-height: 1.8; font-weight: 400; }
+
+        /* ── HOW IT WORKS ── */
+        .steps-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem; margin-top: 3.5rem;
+        }
+        .step-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 18px; padding: 2rem 1.75rem;
+            position: relative; overflow: hidden;
+            transition: all 0.25s;
+        }
+        .step-card:hover { transform: translateY(-4px); border-color: rgba(224,139,106,0.2); box-shadow: 0 16px 48px rgba(0,0,0,0.4); }
+        .step-number {
+            font-size: 3.5rem; font-weight: 900; line-height: 1;
+            color: rgba(224,139,106,0.12); letter-spacing: -0.06em;
+            margin-bottom: 1.25rem; display: block;
+        }
+        .step-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 0.6rem; }
+        .step-card p { font-size: 0.875rem; color: var(--text-dim); line-height: 1.72; }
+        .step-icon { font-size: 1.5rem; margin-bottom: 0.85rem; display: block; }
+
+        /* connector arrows between steps */
+        .steps-wrapper { position: relative; }
+        .step-connector {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); font-size: 1rem; opacity: 0.3;
+            pointer-events: none;
+        }
+        .step-connector.c1 { left: calc(33.33% - 0.5rem); }
+        .step-connector.c2 { left: calc(66.66% - 0.5rem); }
 
         /* ── FEATURE CARDS ── */
         .features-grid {
@@ -217,22 +278,26 @@
         }
         .feature-card[data-accent="salmon"]::before { background: linear-gradient(90deg, transparent, var(--salmon), transparent); }
         .feature-card[data-accent="green"]::before  { background: linear-gradient(90deg, transparent, var(--green), transparent); }
+        .feature-card[data-accent="blue"]::before   { background: linear-gradient(90deg, transparent, var(--blue), transparent); }
         .feature-card:hover { transform: translateY(-4px); }
         .feature-card:hover::before { opacity: 1; }
         .feature-card[data-accent="salmon"]:hover { border-color: rgba(224,139,106,0.25); box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 32px rgba(224,139,106,0.07); }
         .feature-card[data-accent="green"]:hover  { border-color: rgba(93,184,122,0.25);  box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 32px rgba(93,184,122,0.07); }
+        .feature-card[data-accent="blue"]:hover   { border-color: rgba(107,163,214,0.25); box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 32px rgba(107,163,214,0.07); }
 
         .feature-icon { font-size: 1.75rem; margin-bottom: 1rem; display: block; }
         .feature-card[data-accent="salmon"] h3 { color: var(--salmon); }
         .feature-card[data-accent="green"] h3  { color: var(--green); }
+        .feature-card[data-accent="blue"] h3   { color: var(--blue); }
         .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
         .feature-card p { font-size: 0.875rem; color: var(--text-dim); line-height: 1.72; }
         .feature-card ul { list-style: none; margin-top: 0.9rem; }
         .feature-card ul li { font-size: 0.84rem; color: var(--text-dim); padding: 0.2rem 0; display: flex; align-items: flex-start; gap: 0.5rem; }
         .feature-card[data-accent="salmon"] ul li::before { content: '›'; color: var(--salmon); font-weight: 700; flex-shrink: 0; }
         .feature-card[data-accent="green"] ul li::before  { content: '›'; color: var(--green);  font-weight: 700; flex-shrink: 0; }
+        .feature-card[data-accent="blue"] ul li::before   { content: '›'; color: var(--blue);   font-weight: 700; flex-shrink: 0; }
 
-        /* FEATURED: Split Tracker */
+        /* FEATURED: Privacy card */
         .feature-card.featured {
             grid-column: 1 / -1;
             display: grid; grid-template-columns: 1fr 1fr;
@@ -296,19 +361,6 @@
             padding: 0.35rem 0.85rem; border-radius: 8px; letter-spacing: 0.01em;
         }
 
-        /* ── MINI GRID ── */
-        .mini-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 3.5rem; }
-        .mini-card {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 14px; padding: 1.25rem;
-            display: flex; align-items: flex-start; gap: 0.85rem;
-            transition: all 0.2s;
-        }
-        .mini-card:hover { border-color: rgba(255,255,255,0.12); background: var(--bg-elevated); }
-        .mini-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.05rem; }
-        .mini-card h4 { font-size: 0.875rem; font-weight: 600; margin-bottom: 0.2rem; color: var(--text); }
-        .mini-card p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; }
-
         .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
 
         /* ── CTA ── */
@@ -341,15 +393,18 @@
             .features-grid { grid-template-columns: repeat(2, 1fr); }
             .feature-card.featured { grid-template-columns: 1fr; }
             .featured-right { border-left: none; border-top: 1px solid var(--border); padding-left: 0; padding-top: 1.5rem; margin-top: 0.5rem; }
+            .steps-grid { grid-template-columns: 1fr; }
+            .step-connector { display: none; }
         }
 
         @media (max-width: 800px) {
-            .hero { grid-template-columns: 1fr; padding: 100px 1.75rem 4rem; text-align: center; gap: 3rem; }
+            .hero { grid-template-columns: 1fr; padding: 20px 1.75rem 4rem; text-align: center; gap: 3rem; }
             .hero-content { align-items: center; }
             .hero p { max-width: 100%; }
             .hero-visual { order: -1; }
             .phone-wrap { width: 220px; transform: none; }
             .phone-wrap:hover { transform: none; }
+            .breadcrumb { padding: 80px 1.75rem 0; }
         }
 
         @media (max-width: 640px) {
@@ -372,42 +427,54 @@
 
     <!-- NAV -->
     <nav>
-        <span class="nav-logo">Spendly</span>
+        <a href="/spendly/" class="nav-logo">Spendly</a>
         <ul class="nav-links">
+            <li><a href="#how-it-works">How It Works</a></li>
             <li><a href="#features">Features</a></li>
             <li><a href="#privacy">Privacy</a></li>
-            <li><a href="privacy_policy.html">Privacy Policy</a></li>
+            <li><a href="/spendly/" class="nav-back">← All Features</a></li>
         </ul>
     </nav>
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+        <div class="breadcrumb-inner">
+            <a href="/spendly/">Spendly</a>
+            <span>›</span>
+            <a href="/spendly/#features">Features</a>
+            <span>›</span>
+            <strong>Split Tracker</strong>
+        </div>
+    </div>
 
     <!-- HERO -->
     <div class="hero">
         <div class="hero-content">
-            <div class="hero-badge">📱 Available on Google Play</div>
-            <h1>Your money.<br>Your rules.</h1>
-            <p>Spendly is a smart, beautiful, privacy-first personal finance app. Track expenses, scan receipts with AI, split bills with friends, set budgets, earn achievements — all stored locally on your device. No account needed.</p>
+            <div class="hero-badge">☁️ Cloud Feature</div>
+            <h1>Split expenses.<br>Stay in sync.</h1>
+            <p>Spendly's Split Tracker brings Splitwise-style group expense tracking with real-time sync. Create groups, add shared expenses, and settle balances — all fully isolated from your private local finances.</p>
             <div class="hero-cta">
                 <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" class="btn-primary" target="_blank" rel="noopener">
                     ▶ Get on Google Play
                 </a>
-                <a href="#features" class="btn-secondary">Explore features ↓</a>
+                <a href="/spendly/" class="btn-secondary">← Back to Spendly</a>
             </div>
             <div class="hero-stats">
                 <div class="stat">
-                    <span class="stat-value">100%</span>
-                    <span class="stat-label">Local data</span>
+                    <span class="stat-value">Live</span>
+                    <span class="stat-label">Real-time sync</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">3</span>
+                    <span class="stat-label">Split types</span>
                 </div>
                 <div class="stat">
                     <span class="stat-value">0</span>
-                    <span class="stat-label">Accounts needed</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value">AI</span>
-                    <span class="stat-label">Receipt scan</span>
+                    <span class="stat-label">Local exposure</span>
                 </div>
                 <div class="stat">
                     <span class="stat-value">Free</span>
-                    <span class="stat-label">To download</span>
+                    <span class="stat-label">To use</span>
                 </div>
             </div>
         </div>
@@ -417,58 +484,41 @@
                 <div class="phone-frame">
                     <div class="phone-screen">
                         <div class="phone-topbar">
-                            <span class="phone-topbar-title">Dashboard</span>
+                            <span class="phone-topbar-title">Split Tracker</span>
                             <span class="phone-topbar-dot"></span>
                         </div>
-                        <div class="phone-balance-card">
-                            <div class="phone-balance-label">Total Balance</div>
-                            <div class="phone-balance-amount">₹1,24,580</div>
-                            <div class="phone-balance-row">
-                                <div class="phone-balance-pill inc">
-                                    Income<span>+₹45,000</span>
-                                </div>
-                                <div class="phone-balance-pill exp">
-                                    Expense<span>−₹18,240</span>
-                                </div>
-                            </div>
+                        <div class="phone-st-header">
+                            <span class="phone-st-title">My Groups</span>
+                            <span class="phone-st-btn">+ New</span>
                         </div>
-                        <div class="phone-txlist">
-                            <div class="phone-tx">
-                                <div class="phone-tx-left">
-                                    <div class="phone-tx-icon">🛒</div>
-                                    <div>
-                                        <div class="phone-tx-name">Groceries</div>
-                                        <div class="phone-tx-cat">Food</div>
-                                    </div>
-                                </div>
-                                <span class="phone-tx-amount neg">−₹850</span>
+                        <div class="phone-group-card">
+                            <div class="phone-group-avatar" style="background: rgba(224,139,106,0.18);">🏖️</div>
+                            <div class="phone-group-info">
+                                <div class="phone-group-name">Goa Trip</div>
+                                <div class="phone-group-meta">4 members · 6 expenses</div>
                             </div>
-                            <div class="phone-tx">
-                                <div class="phone-tx-left">
-                                    <div class="phone-tx-icon">💼</div>
-                                    <div>
-                                        <div class="phone-tx-name">Salary</div>
-                                        <div class="phone-tx-cat">Income</div>
-                                    </div>
-                                </div>
-                                <span class="phone-tx-amount pos">+₹45,000</span>
+                            <div class="phone-group-balance owe">−₹840</div>
+                        </div>
+                        <div class="phone-group-card">
+                            <div class="phone-group-avatar" style="background: rgba(93,184,122,0.18);">🏠</div>
+                            <div class="phone-group-info">
+                                <div class="phone-group-name">Flat Expenses</div>
+                                <div class="phone-group-meta">3 members · 12 expenses</div>
                             </div>
-                            <div class="phone-tx">
-                                <div class="phone-tx-left">
-                                    <div class="phone-tx-icon">🚗</div>
-                                    <div>
-                                        <div class="phone-tx-name">Transport</div>
-                                        <div class="phone-tx-cat">Travel</div>
-                                    </div>
-                                </div>
-                                <span class="phone-tx-amount neg">−₹320</span>
+                            <div class="phone-group-balance owed">+₹1,200</div>
+                        </div>
+                        <div class="phone-group-card">
+                            <div class="phone-group-avatar" style="background: rgba(107,163,214,0.18);">🍕</div>
+                            <div class="phone-group-info">
+                                <div class="phone-group-name">Friday Dinners</div>
+                                <div class="phone-group-meta">5 members · 3 expenses</div>
                             </div>
+                            <div class="phone-group-balance settled">Settled</div>
                         </div>
                         <div class="phone-tabbar">
-                            <div class="phone-tab active">Home<div class="phone-tab-dot"></div></div>
-                            <div class="phone-tab">Analytics</div>
-                            <div class="phone-tab">Splits</div>
-                            <div class="phone-tab">More</div>
+                            <div class="phone-tab active">Groups<div class="phone-tab-dot"></div></div>
+                            <div class="phone-tab">Activity</div>
+                            <div class="phone-tab">Profile</div>
                         </div>
                     </div>
                 </div>
@@ -478,158 +528,134 @@
 
     <hr class="divider">
 
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works">
+        <div class="container">
+            <div class="section-label">How It Works</div>
+            <h2 class="section-title">Up and splitting in seconds</h2>
+            <p class="section-subtitle">No complicated onboarding. Create a group, share the code, start adding expenses.</p>
+
+            <div class="steps-wrapper">
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <span class="step-number">01</span>
+                        <span class="step-icon">👥</span>
+                        <h3>Create a group & invite</h3>
+                        <p>Start a group for a trip, flat, or any shared expense. Share the invite code with friends — they join instantly, no account friction.</p>
+                    </div>
+                    <div class="step-card">
+                        <span class="step-number">02</span>
+                        <span class="step-icon">➕</span>
+                        <h3>Add expenses your way</h3>
+                        <p>Log any shared expense and choose how to split it — equally, by exact amounts, or by percentage. Support for multiple payers per expense.</p>
+                    </div>
+                    <div class="step-card">
+                        <span class="step-number">03</span>
+                        <span class="step-icon">✅</span>
+                        <h3>Track balances & settle</h3>
+                        <p>See who owes what at a glance. Record settlements between members, watch balances update in real time, and clear the slate without awkward conversations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
     <!-- FEATURES -->
     <section id="features">
         <div class="container">
             <div class="section-label">Features</div>
-            <h2 class="section-title">Everything you need to manage money</h2>
-            <p class="section-subtitle">Powerful features designed for everyday personal finance — without the complexity.</p>
+            <h2 class="section-title">Everything a group needs</h2>
+            <p class="section-subtitle">Built for real shared expenses — from weekend trips to long-term flatmates.</p>
 
             <div class="features-grid">
 
                 <div class="feature-card" data-accent="salmon">
-                    <span class="feature-icon">📷</span>
-                    <h3>AI Receipt Scanning</h3>
-                    <p>Snap a photo of any receipt and let AI auto-fill the amount, date, and title — no manual entry required.</p>
+                    <span class="feature-icon">👥</span>
+                    <h3>Group Management</h3>
+                    <p>Create and manage multiple groups for any occasion — trips, homes, or recurring shared costs.</p>
                     <ul>
-                        <li>Google ML Kit on-device OCR engine</li>
-                        <li>AI extraction layer for better accuracy</li>
-                        <li>Works fully offline — no image upload</li>
-                        <li>AI-refined results flagged with a badge</li>
+                        <li>Create groups with a name and icon</li>
+                        <li>Invite members instantly via a simple group code</li>
+                        <li>Admin & member roles with promotion support</li>
+                        <li>Leave group — last admin must pass the role first</li>
                     </ul>
                 </div>
 
                 <div class="feature-card" data-accent="green">
-                    <span class="feature-icon">💸</span>
-                    <h3>Expense & Income Tracking</h3>
-                    <p>Log every transaction with full detail — categories, notes, images, and custom icons.</p>
+                    <span class="feature-icon">⚖️</span>
+                    <h3>Flexible Splits</h3>
+                    <p>Every expense is different — split however makes sense for the situation.</p>
                     <ul>
-                        <li>Expense, income, and transfer types</li>
-                        <li>Custom categories with icons & colors</li>
-                        <li>Person & loan linking per transaction</li>
-                        <li>Speed-dial FAB for instant entry</li>
+                        <li>Equal split across all or selected members</li>
+                        <li>Percentage-based split</li>
+                        <li>Exact amount per person</li>
+                        <li>Multi-payer support per expense</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card" data-accent="blue">
+                    <span class="feature-icon">⚡</span>
+                    <h3>Real-Time Sync</h3>
+                    <p>Powered by Supabase — all group members see changes the moment they happen, no manual refresh needed.</p>
+                    <ul>
+                        <li>Live updates for expenses and settlements</li>
+                        <li>Always up-to-date balance summaries</li>
+                        <li>Works across Android devices</li>
                     </ul>
                 </div>
 
                 <div class="feature-card" data-accent="salmon">
-                    <span class="feature-icon">💳</span>
-                    <h3>Multi-Account Management</h3>
-                    <p>Track all your accounts in one place — bank, cash, e-wallets, credit cards, and investments.</p>
+                    <span class="feature-icon">💰</span>
+                    <h3>Settlement Tracking</h3>
+                    <p>Track who has paid whom and watch balances settle in real time — no spreadsheet required.</p>
                     <ul>
-                        <li>Unlimited accounts</li>
-                        <li>Seamless transfers with auto balance updates</li>
-                        <li>Per-account transaction history</li>
+                        <li>Record payments between any two members</li>
+                        <li>Live balance summaries per person</li>
+                        <li>Clear view of net owed vs. net receivable</li>
                     </ul>
                 </div>
 
                 <div class="feature-card" data-accent="green">
-                    <span class="feature-icon">📊</span>
-                    <h3>Analytics & Insights</h3>
-                    <p>Understand your spending patterns with interactive charts and flexible date filters.</p>
+                    <span class="feature-icon">📋</span>
+                    <h3>Activity Feed</h3>
+                    <p>Full group history in one place — every expense, payment, and change, filtered the way you want.</p>
                     <ul>
-                        <li>Category-wise pie charts</li>
-                        <li>Income vs. expense bar chart trends</li>
-                        <li>Filter by Today / Week / Month / Custom</li>
-                        <li>Hide all amounts with one tap</li>
+                        <li>All / Mine / Payments tab views</li>
+                        <li>"See all" full-screen paginated history</li>
+                        <li>Timestamp and member context on every event</li>
                     </ul>
                 </div>
 
-                <div class="feature-card" data-accent="green">
-                    <span class="feature-icon">🎯</span>
-                    <h3>Budgets & Savings Goals</h3>
-                    <p>Set weekly, monthly, or yearly category budgets and savings targets — track progress in real time.</p>
+                <div class="feature-card" data-accent="blue">
+                    <span class="feature-icon">👤</span>
+                    <h3>Profile Screen</h3>
+                    <p>Your Split Tracker identity is separate from your local Spendly profile — customize it independently.</p>
                     <ul>
-                        <li>Per-category budget periods</li>
-                        <li>Goal progress with target amounts & deadlines</li>
-                        <li>Budget threshold notifications</li>
+                        <li>Edit display name, phone, and profession</li>
+                        <li>Set preferred currency for the group context</li>
+                        <li>Add a short bio visible to group members</li>
                     </ul>
                 </div>
 
-                <div class="feature-card" data-accent="salmon">
-                    <span class="feature-icon">🔄</span>
-                    <h3>Recurring Transactions</h3>
-                    <p>Automate subscriptions, bills, and any repeating transaction — processed automatically on app start.</p>
-                    <ul>
-                        <li>Daily, weekly, monthly, yearly schedules</li>
-                        <li>Auto-posts on schedule</li>
-                        <li>Skip individual occurrences</li>
-                    </ul>
-                </div>
-
-                <!-- FEATURED: Split Tracker -->
+                <!-- FEATURED: Privacy isolation -->
                 <div class="feature-card featured" data-accent="salmon">
                     <div class="featured-left">
-                        <span class="feature-icon">🌐</span>
-                        <h3>Split Tracker <span class="badge">Cloud</span></h3>
-                        <p>Splitwise-style group expense tracking with real-time sync — privacy-isolated from your local data. Create groups, invite members with a simple code, and settle balances without awkward conversations.</p>
-                        <a href="feature/split_tracker/" style="display:inline-flex;align-items:center;gap:0.35rem;margin-top:1.25rem;font-size:0.85rem;font-weight:600;color:var(--salmon);text-decoration:none;border:1px solid var(--border-warm);padding:0.4rem 1rem;border-radius:8px;transition:all 0.2s;" onmouseover="this.style.background='var(--salmon-pale)'" onmouseout="this.style.background='transparent'">Learn more →</a>
+                        <span class="feature-icon">🔒</span>
+                        <h3>Privacy-Isolated <span class="badge">By Design</span></h3>
+                        <p>Split Tracker is a self-contained cloud module. Your personal transactions, budgets, accounts, and categories are stored exclusively on your device and are completely untouched by the cloud layer — even when Split Tracker is active.</p>
                     </div>
                     <div class="featured-right">
                         <ul>
-                            <li>Create groups, invite members instantly</li>
-                            <li>Equal, percentage, or exact splits</li>
-                            <li>Live balance summaries & settlement tracking</li>
-                            <li>Group activity feed with full history</li>
-                            <li>Multi-payer support per expense</li>
-                            <li>Real-time sync across all group members</li>
-                            <li>Isolated cloud module — personal data stays local</li>
+                            <li>Lazy initialization — no network connection opened until you deliberately enable Split Tracker</li>
+                            <li>Cloud module lives in a separate package with no access to local Isar data</li>
+                            <li>Disabling Split Tracker closes all network connections immediately</li>
+                            <li>Personal finance data never leaves your device</li>
+                            <li>No cross-contamination between local and cloud data</li>
+                            <li>Opt-in, not opt-out — cloud only activates on your terms</li>
                         </ul>
                     </div>
-                </div>
-
-                <div class="feature-card" data-accent="salmon">
-                    <span class="feature-icon">🧾</span>
-                    <h3>Bill Splitting <span class="badge">Local</span></h3>
-                    <p>Split expenses with friends locally using equal, percentage, or exact amounts — instantly.</p>
-                    <ul>
-                        <li>Equal, percentage, or exact split</li>
-                        <li>Smart settlement tracking flow</li>
-                        <li>Full history with per-person breakdowns</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="salmon">
-                    <span class="feature-icon">🤝</span>
-                    <h3>Loan Tracking</h3>
-                    <p>Keep tabs on money lent to or borrowed from contacts, with repayment history and overdue detection.</p>
-                    <ul>
-                        <li>Track lent & borrowed amounts</li>
-                        <li>Record partial repayments</li>
-                        <li>Active / Paid / Overdue status badges</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="salmon">
-                    <span class="feature-icon">📅</span>
-                    <h3>Calendar View</h3>
-                    <p>Navigate your transaction history visually with monthly and week views and an activity heatmap.</p>
-                    <ul>
-                        <li>Swipe left/right to navigate months</li>
-                        <li>Swipe up/down to toggle week view</li>
-                        <li>Color-coded activity heatmap per day</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="green">
-                    <span class="feature-icon">🏆</span>
-                    <h3>Achievements & Streaks</h3>
-                    <p>Stay motivated with gamification — earn badges for milestones and build your daily logging streak.</p>
-                    <ul>
-                        <li>Daily & longest streak counters</li>
-                        <li>Badges for savings goals, budget discipline & more</li>
-                        <li>App-wide achievement unlock animations</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="salmon">
-                    <span class="feature-icon">🔔</span>
-                    <h3>Smart Notifications</h3>
-                    <p>Stay on top of your finances with timely reminders, budget alerts, and a full notification history.</p>
-                    <ul>
-                        <li>Bill payment & budget threshold alerts</li>
-                        <li>Configurable daily logging reminder</li>
-                        <li>Notification history screen with read/clear</li>
-                    </ul>
                 </div>
 
             </div>
@@ -642,46 +668,20 @@
     <section id="privacy">
         <div class="container">
             <div class="privacy-highlight">
-                <div class="icon-big">🔒</div>
+                <div class="icon-big">🛡️</div>
                 <div class="privacy-content">
                     <div class="section-label">Privacy First</div>
-                    <h2 class="section-title" style="font-size: 1.9rem;">Your core data never leaves your device</h2>
-                    <p>Spendly requires no account, no sign-in, and no internet connection for core features. Every transaction, account, and budget is stored exclusively in your phone's local database using Isar — fast, encrypted, and 100% private. The optional cloud Split Tracker is fully isolated and only activates when you choose to enable it.</p>
+                    <h2 class="section-title" style="font-size: 1.9rem;">Your personal data never touches the cloud</h2>
+                    <p>Split Tracker uses Supabase for real-time sync, but only for group-shared data you explicitly add to a group. Your transactions, budgets, accounts, and personal finances remain 100% local. The cloud module is lazily initialized — no network connection is opened until you actively launch Split Tracker for the first time.</p>
                     <div class="privacy-pillars">
-                        <span class="pillar">No cloud sync</span>
-                        <span class="pillar">No account required</span>
-                        <span class="pillar">No data mining</span>
-                        <span class="pillar">Offline first</span>
-                        <span class="pillar">Biometric lock</span>
-                        <span class="pillar">Encrypted backup</span>
+                        <span class="pillar">Opt-in cloud</span>
+                        <span class="pillar">Lazy init</span>
+                        <span class="pillar">Isolated package</span>
+                        <span class="pillar">No local data sync</span>
+                        <span class="pillar">No tracking</span>
+                        <span class="pillar">Group data only</span>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <hr class="divider">
-
-    <!-- MORE -->
-    <section>
-        <div class="container">
-            <div class="section-label">More</div>
-            <h2 class="section-title">Designed for you</h2>
-            <p class="section-subtitle">Personalize the look, protect your data, manage contacts, and export whenever you need.</p>
-
-            <div class="mini-grid">
-                <div class="mini-card"><span class="mini-icon">🎨</span><div><h4>Dark & Light Themes</h4><p>Full dark/light/system mode with true-black OLED option.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">🌈</span><div><h4>8 Color Schemes</h4><p>Teal, Purple, Indigo, Pink, Coffee, Earthy, Wood, and more.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">🖼️</span><div><h4>Custom Category Icons</h4><p>Pick from Material icons or use your own gallery images.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">🔤</span><div><h4>5 Font Size Levels</h4><p>Scale all text from Small to XX-Large for your comfort.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">👆</span><div><h4>Biometric Lock</h4><p>Secure the app with Face ID or fingerprint authentication.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">📤</span><div><h4>Export to PDF & CSV</h4><p>Share or archive your transaction history and generate per-transaction receipts.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">💾</span><div><h4>Auto & Manual Backup</h4><p>Scheduled daily encrypted backups with configurable retention count.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">🏠</span><div><h4>Home Screen Widgets</h4><p>Budget, Quick Add, and Split Bill widgets right on your home screen.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">👤</span><div><h4>People & Contacts</h4><p>Manage financial contacts linked to transactions, loans, and splits.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">💱</span><div><h4>Multi-Currency</h4><p>Set your preferred currency for all transactions and reports.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">👁️</span><div><h4>Amounts Visibility Toggle</h4><p>Hide all monetary values across the app with a single tap.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">⚡</span><div><h4>Blazing Fast</h4><p>Built on Isar — high-performance local database with instant queries.</p></div></div>
             </div>
         </div>
     </section>
@@ -691,8 +691,8 @@
     <!-- CTA -->
     <section class="cta-section">
         <div class="container">
-            <h2 class="section-title">Start tracking smarter today</h2>
-            <p>No sign-up. No subscription. Download Spendly for free and take control of your finances.</p>
+            <h2 class="section-title">Ready to split smarter?</h2>
+            <p>Download Spendly for free and start splitting expenses with your group — no setup friction, no spreadsheets.</p>
             <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" class="btn-primary large" target="_blank" rel="noopener">
                 ▶ Download on Google Play
             </a>
@@ -702,11 +702,11 @@
     <!-- FOOTER -->
     <footer>
         <div class="footer-logo">Spendly</div>
-        <div class="footer-tagline">Personal Finance & Expense Tracker</div>
+        <div class="footer-tagline">Split Tracker — Real-time Group Expense Sharing</div>
         <div class="footer-links">
+            <a href="/spendly/">← Back to Spendly</a>
             <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" target="_blank" rel="noopener">Google Play</a>
-            <a href="privacy_policy.html">Privacy Policy</a>
-            <a href="app-ads.txt">app-ads.txt</a>
+            <a href="/spendly/privacy_policy.html">Privacy Policy</a>
         </div>
         <div class="footer-copy">&copy; <span id="year"></span> Tejnc. All rights reserved.</div>
     </footer>
