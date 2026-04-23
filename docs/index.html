@@ -13,171 +13,361 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tejnc.github.io/spendly">
     <link rel="canonical" href="https://tejnc.github.io/spendly">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --accent: #f5c6a0;
-            --accent-dim: #c9956e;
-            --bg: #0d0d0d;
-            --bg-card: #161616;
-            --bg-elevated: #1e1e1e;
-            --border: #2a2a2a;
-            --text: #e0e0e0;
-            --text-muted: #888;
-            --text-dim: #b0b0b0;
+            --salmon:       #E08B6A;
+            --salmon-light: #F2A882;
+            --salmon-pale:  rgba(224, 139, 106, 0.15);
+            --salmon-glow:  rgba(224, 139, 106, 0.09);
+            --green:        #5DB87A;
+            --green-pale:   rgba(93, 184, 122, 0.15);
+            --bg:           #0e0c0a;
+            --bg-card:      #161412;
+            --bg-elevated:  #1E1B18;
+            --border:       rgba(255, 255, 255, 0.08);
+            --border-warm:  rgba(224, 139, 106, 0.22);
+            --text:         #F5F0EA;
+            --text-muted:   rgba(245, 240, 234, 0.5);
+            --text-dim:     rgba(245, 240, 234, 0.7);
         }
 
         html { scroll-behavior: smooth; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
             overflow-x: hidden;
         }
 
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: 3px; }
+
+        /* ── NAV ── */
         nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            background: rgba(13, 13, 13, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
+            background: rgba(14, 12, 10, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             padding: 0 2rem; height: 60px;
             display: flex; align-items: center; justify-content: space-between;
         }
-        .nav-logo { font-size: 1.2rem; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; }
+        .nav-logo { font-size: 1.2rem; font-weight: 700; color: var(--salmon); letter-spacing: -0.03em; }
         .nav-links { display: flex; gap: 2rem; list-style: none; }
-        .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
-        .nav-links a:hover { color: var(--accent); }
+        .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--salmon); }
+
+        /* ── HERO ── */
+        .hero-glow {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none; z-index: 0;
+            background:
+                radial-gradient(ellipse 55% 45% at 25% 15%, var(--salmon-glow) 0%, transparent 70%),
+                radial-gradient(ellipse 35% 35% at 75% 85%, rgba(93,184,122,0.05) 0%, transparent 70%);
+        }
 
         .hero {
             min-height: 100vh;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; padding: 100px 2rem 4rem; position: relative;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 4rem;
+            padding: 100px 5rem 4rem;
+            max-width: 1280px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
-        .hero::before {
-            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(245, 198, 160, 0.07) 0%, transparent 70%);
-            pointer-events: none;
-        }
+        .hero-content { display: flex; flex-direction: column; align-items: flex-start; }
         .hero-badge {
             display: inline-flex; align-items: center; gap: 0.4rem;
-            background: rgba(245, 198, 160, 0.1); border: 1px solid rgba(245, 198, 160, 0.25);
-            color: var(--accent); font-size: 0.8rem; font-weight: 500;
-            padding: 0.35rem 0.9rem; border-radius: 999px; margin-bottom: 2rem; letter-spacing: 0.03em;
+            background: var(--salmon-pale); border: 1px solid var(--border-warm);
+            color: var(--salmon); font-size: 0.75rem; font-weight: 600;
+            padding: 0.35rem 0.95rem; border-radius: 999px; margin-bottom: 2rem;
+            letter-spacing: 0.05em; text-transform: uppercase;
         }
         .hero h1 {
-            font-size: clamp(2.8rem, 8vw, 5.5rem); font-weight: 800;
+            font-size: clamp(2.8rem, 5.5vw, 4.8rem); font-weight: 800;
             letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #ffffff 0%, var(--accent) 100%);
+            background: linear-gradient(140deg, var(--text) 30%, var(--salmon) 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
         .hero p {
-            font-size: clamp(1rem, 2.5vw, 1.25rem); color: var(--text-dim);
-            max-width: 580px; margin-bottom: 2.5rem; line-height: 1.7;
+            font-size: 1.05rem; color: var(--text-dim); max-width: 480px;
+            margin-bottom: 2.5rem; line-height: 1.8; font-weight: 400;
         }
-        .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 4rem; }
+        .hero-cta { display: flex; gap: 0.85rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
 
         .btn-primary {
             display: inline-flex; align-items: center; gap: 0.5rem;
-            background: var(--accent); color: #0d0d0d;
+            background: var(--salmon); color: #0e0c0a;
             text-decoration: none; font-weight: 700; font-size: 0.95rem;
-            padding: 0.8rem 1.8rem; border-radius: 12px; transition: all 0.2s;
+            padding: 0.8rem 1.75rem; border-radius: 12px; transition: all 0.2s;
+            letter-spacing: -0.01em;
         }
-        .btn-primary:hover { background: #f9d7bc; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(245, 198, 160, 0.25); }
-
+        .btn-primary:hover {
+            background: var(--salmon-light); transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(224, 139, 106, 0.32);
+        }
         .btn-secondary {
             display: inline-flex; align-items: center; gap: 0.5rem;
             background: transparent; color: var(--text-dim); text-decoration: none;
-            font-weight: 500; font-size: 0.95rem; padding: 0.8rem 1.8rem;
+            font-weight: 500; font-size: 0.95rem; padding: 0.8rem 1.75rem;
             border-radius: 12px; border: 1px solid var(--border); transition: all 0.2s;
         }
-        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-secondary:hover { border-color: var(--border-warm); color: var(--salmon); }
 
-        .hero-stats { display: flex; gap: 3rem; flex-wrap: wrap; justify-content: center; }
-        .stat { text-align: center; }
-        .stat-value { font-size: 1.8rem; font-weight: 800; color: var(--accent); letter-spacing: -0.03em; }
-        .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+        .hero-stats {
+            display: flex; background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+        }
+        .stat { text-align: center; padding: 1rem 1.4rem; border-right: 1px solid var(--border); }
+        .stat:last-child { border-right: none; }
+        .stat-value { font-size: 1.45rem; font-weight: 800; color: var(--salmon); letter-spacing: -0.04em; display: block; line-height: 1.2; }
+        .stat-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; display: block; margin-top: 0.25rem; }
 
+        /* ── PHONE MOCKUP ── */
+        .hero-visual { display: flex; align-items: center; justify-content: center; }
+        .phone-wrap {
+            width: 270px;
+            transform: perspective(1000px) rotateY(-8deg) rotateX(2deg);
+            transition: transform 0.5s ease;
+        }
+        .phone-wrap:hover { transform: perspective(1000px) rotateY(-3deg) rotateX(1deg); }
+        .phone-frame {
+            background: var(--bg-elevated);
+            border: 1.5px solid rgba(224,139,106,0.35);
+            border-radius: 36px; padding: 10px;
+            box-shadow:
+                0 48px 96px rgba(0,0,0,0.65),
+                0 0 0 1px rgba(255,255,255,0.04),
+                inset 0 1px 0 rgba(255,255,255,0.07);
+        }
+        .phone-screen { background: var(--bg-card); border-radius: 28px; overflow: hidden; padding-bottom: 14px; }
+        .phone-topbar {
+            background: #1a1714; padding: 13px 18px 11px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+        .phone-topbar-title { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
+        .phone-topbar-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--salmon); opacity: 0.75; }
+        .phone-balance-card {
+            margin: 14px 13px 12px;
+            background: linear-gradient(135deg, #272320 0%, #1E1B18 100%);
+            border: 1px solid rgba(224,139,106,0.18);
+            border-radius: 16px; padding: 14px;
+        }
+        .phone-balance-label { font-size: 0.58rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+        .phone-balance-amount { font-size: 1.4rem; font-weight: 700; color: var(--text); letter-spacing: -0.03em; margin-bottom: 10px; }
+        .phone-balance-row { display: flex; gap: 7px; }
+        .phone-balance-pill { flex: 1; border-radius: 10px; padding: 7px 9px; font-size: 0.58rem; font-weight: 600; }
+        .phone-balance-pill.inc { background: rgba(93,184,122,0.18); color: #5DB87A; }
+        .phone-balance-pill.exp { background: rgba(224,139,106,0.18); color: var(--salmon); }
+        .phone-balance-pill span { display: block; font-size: 0.74rem; font-weight: 700; margin-top: 2px; }
+        .phone-txlist { padding: 0 13px; }
+        .phone-tx {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 0; border-bottom: 1px solid var(--border);
+        }
+        .phone-tx:last-child { border-bottom: none; }
+        .phone-tx-left { display: flex; align-items: center; gap: 8px; }
+        .phone-tx-icon { width: 27px; height: 27px; border-radius: 8px; background: var(--bg-elevated); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; }
+        .phone-tx-name { font-size: 0.7rem; font-weight: 500; color: var(--text); }
+        .phone-tx-cat { font-size: 0.58rem; color: var(--text-muted); }
+        .phone-tx-amount { font-weight: 700; font-size: 0.72rem; }
+        .phone-tx-amount.neg { color: var(--salmon); }
+        .phone-tx-amount.pos { color: var(--green); }
+        .phone-tabbar {
+            margin: 12px 13px 0;
+            background: var(--bg-elevated); border-radius: 13px; padding: 7px 10px;
+            display: flex; justify-content: space-around; border: 1px solid var(--border);
+        }
+        .phone-tab { font-size: 0.56rem; color: var(--text-muted); text-align: center; font-weight: 500; padding: 2px 3px; }
+        .phone-tab.active { color: var(--salmon); }
+        .phone-tab-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--salmon); margin: 3px auto 0; }
+
+        /* ── SHARED SECTION STYLES ── */
         section { padding: 6rem 2rem; }
         .container { max-width: 1100px; margin: 0 auto; }
-        .section-label { font-size: 0.75rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.75rem; }
-        .section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1rem; line-height: 1.2; }
-        .section-subtitle { font-size: 1.05rem; color: var(--text-dim); max-width: 520px; line-height: 1.7; }
+        .section-label { font-size: 0.72rem; font-weight: 600; color: var(--salmon); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 0.75rem; }
+        .section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.04em; margin-bottom: 1rem; line-height: 1.15; }
+        .section-subtitle { font-size: 1rem; color: var(--text-dim); max-width: 520px; line-height: 1.8; font-weight: 400; }
 
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 3.5rem; }
-
+        /* ── FEATURE CARDS ── */
+        .features-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem; margin-top: 3.5rem;
+        }
         .feature-card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
-            padding: 1.75rem; transition: all 0.25s; position: relative; overflow: hidden;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 18px; padding: 1.75rem;
+            transition: all 0.25s; position: relative; overflow: hidden;
         }
         .feature-card::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
             opacity: 0; transition: opacity 0.3s;
         }
-        .feature-card:hover { border-color: rgba(245, 198, 160, 0.3); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+        .feature-card[data-accent="salmon"]::before { background: linear-gradient(90deg, transparent, var(--salmon), transparent); }
+        .feature-card[data-accent="green"]::before  { background: linear-gradient(90deg, transparent, var(--green), transparent); }
+        .feature-card:hover { transform: translateY(-4px); }
         .feature-card:hover::before { opacity: 1; }
-        .feature-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
-        .feature-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--accent); margin-bottom: 0.5rem; }
-        .feature-card p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.65; }
-        .feature-card ul { list-style: none; margin-top: 0.75rem; }
-        .feature-card ul li { font-size: 0.875rem; color: var(--text-dim); padding: 0.2rem 0; display: flex; align-items: flex-start; gap: 0.5rem; }
-        .feature-card ul li::before { content: '›'; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+        .feature-card[data-accent="salmon"]:hover { border-color: rgba(224,139,106,0.25); box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 32px rgba(224,139,106,0.07); }
+        .feature-card[data-accent="green"]:hover  { border-color: rgba(93,184,122,0.25);  box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 32px rgba(93,184,122,0.07); }
+
+        .feature-icon { font-size: 1.75rem; margin-bottom: 1rem; display: block; }
+        .feature-card[data-accent="salmon"] h3 { color: var(--salmon); }
+        .feature-card[data-accent="green"] h3  { color: var(--green); }
+        .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .feature-card p { font-size: 0.875rem; color: var(--text-dim); line-height: 1.72; }
+        .feature-card ul { list-style: none; margin-top: 0.9rem; }
+        .feature-card ul li { font-size: 0.84rem; color: var(--text-dim); padding: 0.2rem 0; display: flex; align-items: flex-start; gap: 0.5rem; }
+        .feature-card[data-accent="salmon"] ul li::before { content: '›'; color: var(--salmon); font-weight: 700; flex-shrink: 0; }
+        .feature-card[data-accent="green"] ul li::before  { content: '›'; color: var(--green);  font-weight: 700; flex-shrink: 0; }
+
+        /* FEATURED: Split Tracker */
+        .feature-card.featured {
+            grid-column: 1 / -1;
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 0; align-items: start;
+            background: linear-gradient(135deg, #1E1B18 0%, #161412 100%);
+            border-color: rgba(224,139,106,0.2); padding: 2.25rem;
+        }
+        .feature-card.featured::after {
+            content: ''; position: absolute; right: -80px; top: -80px;
+            width: 360px; height: 360px;
+            background: radial-gradient(circle, rgba(224,139,106,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .feature-card.featured h3 { font-size: 1.2rem; margin-bottom: 0.65rem; }
+        .feature-card.featured p { font-size: 0.9rem; max-width: 400px; }
+        .featured-right {
+            border-left: 1px solid var(--border);
+            padding-left: 2.25rem;
+        }
+        .featured-right ul li { font-size: 0.875rem; }
 
         .badge {
-            display: inline-block; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em;
-            text-transform: uppercase; padding: 0.15rem 0.45rem; border-radius: 4px;
+            display: inline-block; font-size: 0.58rem; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            padding: 0.15rem 0.5rem; border-radius: 5px;
             vertical-align: middle; margin-left: 0.4rem;
-            background: rgba(245, 198, 160, 0.15); color: var(--accent); border: 1px solid rgba(245, 198, 160, 0.3);
+            background: var(--salmon-pale); color: var(--salmon); border: 1px solid var(--border-warm);
         }
+        .badge.green { background: var(--green-pale); color: var(--green); border-color: rgba(93,184,122,0.3); }
 
+        /* ── PRIVACY ── */
         .privacy-highlight {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 24px;
-            padding: 4rem 3rem; display: flex; gap: 3rem; align-items: center; flex-wrap: wrap;
+            position: relative;
+            background: linear-gradient(135deg, #1E1B18 0%, #161412 100%);
+            border-radius: 24px; padding: 4rem 3rem;
+            display: flex; gap: 3rem; align-items: center; flex-wrap: wrap;
+            overflow: hidden;
         }
-        .privacy-highlight .icon-big { font-size: 5rem; flex-shrink: 0; }
-        .privacy-highlight h2 { font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
-        .privacy-highlight p { color: var(--text-dim); font-size: 1rem; line-height: 1.7; max-width: 500px; }
-        .privacy-pillars { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
+        .privacy-highlight::before {
+            content: ''; position: absolute; inset: 0; border-radius: 24px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(224,139,106,0.3), rgba(255,255,255,0.05), rgba(93,184,122,0.12));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+        }
+        .privacy-highlight::after {
+            content: ''; position: absolute; right: -60px; top: -60px;
+            width: 320px; height: 320px;
+            background: radial-gradient(circle, rgba(224,139,106,0.07) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .privacy-highlight .icon-big { font-size: 4.5rem; flex-shrink: 0; position: relative; z-index: 1; }
+        .privacy-content { flex: 1; min-width: 280px; position: relative; z-index: 1; }
+        .privacy-highlight h2 { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0.75rem; }
+        .privacy-highlight p { color: var(--text-dim); font-size: 1rem; line-height: 1.78; max-width: 500px; }
+        .privacy-pillars { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 1.5rem; }
         .pillar {
-            background: rgba(245, 198, 160, 0.08); border: 1px solid rgba(245, 198, 160, 0.2);
-            color: var(--accent); font-size: 0.8rem; font-weight: 600; padding: 0.35rem 0.85rem; border-radius: 8px;
+            background: var(--salmon-pale); border: 1px solid var(--border-warm);
+            color: var(--salmon); font-size: 0.78rem; font-weight: 600;
+            padding: 0.35rem 0.85rem; border-radius: 8px; letter-spacing: 0.01em;
         }
 
+        /* ── MINI GRID ── */
         .mini-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 3.5rem; }
         .mini-card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
-            padding: 1.25rem; display: flex; align-items: flex-start; gap: 0.85rem;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 1.25rem;
+            display: flex; align-items: flex-start; gap: 0.85rem;
+            transition: all 0.2s;
         }
-        .mini-card .mini-icon { font-size: 1.4rem; flex-shrink: 0; }
-        .mini-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
-        .mini-card p { font-size: 0.8rem; color: var(--text-muted); }
+        .mini-card:hover { border-color: rgba(255,255,255,0.12); background: var(--bg-elevated); }
+        .mini-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.05rem; }
+        .mini-card h4 { font-size: 0.875rem; font-weight: 600; margin-bottom: 0.2rem; color: var(--text); }
+        .mini-card p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; }
 
         .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
 
+        /* ── CTA ── */
+        .cta-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, #1E1B18 0%, #0e0c0a 100%);
+            text-align: center; position: relative; overflow: hidden;
+        }
+        .cta-section::before {
+            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 700px; height: 400px;
+            background: radial-gradient(ellipse, rgba(224,139,106,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .cta-section .container { position: relative; z-index: 1; }
+        .cta-section p { color: var(--text-dim); margin: 1rem auto 2.5rem; max-width: 460px; font-size: 1.05rem; }
+        .btn-primary.large { font-size: 1rem; padding: 1rem 2.5rem; border-radius: 14px; }
+
+        /* ── FOOTER ── */
         footer { background: var(--bg-card); border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; }
-        .footer-logo { font-size: 1.5rem; font-weight: 800; color: var(--accent); margin-bottom: 0.75rem; }
-        .footer-tagline { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2rem; }
+        .footer-logo { font-size: 1.5rem; font-weight: 800; color: var(--salmon); margin-bottom: 0.5rem; letter-spacing: -0.04em; }
+        .footer-tagline { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 2rem; }
         .footer-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem; }
-        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
-        .footer-links a:hover { color: var(--accent); }
-        .footer-copy { font-size: 0.8rem; color: var(--text-muted); }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--salmon); }
+        .footer-copy { font-size: 0.78rem; color: var(--text-muted); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 960px) {
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .feature-card.featured { grid-template-columns: 1fr; }
+            .featured-right { border-left: none; border-top: 1px solid var(--border); padding-left: 0; padding-top: 1.5rem; margin-top: 0.5rem; }
+        }
+
+        @media (max-width: 800px) {
+            .hero { grid-template-columns: 1fr; padding: 100px 1.75rem 4rem; text-align: center; gap: 3rem; }
+            .hero-content { align-items: center; }
+            .hero p { max-width: 100%; }
+            .hero-visual { order: -1; }
+            .phone-wrap { width: 220px; transform: none; }
+            .phone-wrap:hover { transform: none; }
+        }
 
         @media (max-width: 640px) {
             nav { padding: 0 1.25rem; }
             .nav-links { gap: 1.25rem; }
             section { padding: 4rem 1.25rem; }
+            .features-grid { grid-template-columns: 1fr; }
             .privacy-highlight { padding: 2.5rem 1.75rem; flex-direction: column; gap: 1.5rem; }
             .privacy-highlight .icon-big { font-size: 3.5rem; }
-            .hero-stats { gap: 1.75rem; }
+            .hero-stats { width: 100%; }
+            .stat { flex: 1; padding: 0.85rem 0.5rem; }
+            .stat-value { font-size: 1.2rem; }
         }
     </style>
 </head>
 
 <body>
+
+    <div class="hero-glow"></div>
 
     <!-- NAV -->
     <nav>
@@ -190,37 +380,100 @@
     </nav>
 
     <!-- HERO -->
-    <section class="hero">
-        <div class="hero-badge">📱 Available on Google Play</div>
-        <h1>Your money.<br>Your rules.</h1>
-        <p>Spendly is a smart, beautiful, privacy-first personal finance app. Track expenses, scan receipts with AI,
-            split bills with friends, set budgets, earn achievements — all stored locally on your device. No account needed.</p>
-        <div class="hero-cta">
-            <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" class="btn-primary"
-                target="_blank" rel="noopener">
-                ▶ Get it on Google Play
-            </a>
-            <a href="#features" class="btn-secondary">Explore features ↓</a>
+    <div class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">📱 Available on Google Play</div>
+            <h1>Your money.<br>Your rules.</h1>
+            <p>Spendly is a smart, beautiful, privacy-first personal finance app. Track expenses, scan receipts with AI, split bills with friends, set budgets, earn achievements — all stored locally on your device. No account needed.</p>
+            <div class="hero-cta">
+                <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" class="btn-primary" target="_blank" rel="noopener">
+                    ▶ Get on Google Play
+                </a>
+                <a href="#features" class="btn-secondary">Explore features ↓</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-value">100%</span>
+                    <span class="stat-label">Local data</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">0</span>
+                    <span class="stat-label">Accounts needed</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">AI</span>
+                    <span class="stat-label">Receipt scan</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">Free</span>
+                    <span class="stat-label">To download</span>
+                </div>
+            </div>
         </div>
-        <div class="hero-stats">
-            <div class="stat">
-                <div class="stat-value">100%</div>
-                <div class="stat-label">Local data</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">0</div>
-                <div class="stat-label">Account needed</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">AI</div>
-                <div class="stat-label">Receipt scanning</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">Free</div>
-                <div class="stat-label">To download</div>
+
+        <div class="hero-visual">
+            <div class="phone-wrap">
+                <div class="phone-frame">
+                    <div class="phone-screen">
+                        <div class="phone-topbar">
+                            <span class="phone-topbar-title">Dashboard</span>
+                            <span class="phone-topbar-dot"></span>
+                        </div>
+                        <div class="phone-balance-card">
+                            <div class="phone-balance-label">Total Balance</div>
+                            <div class="phone-balance-amount">₹1,24,580</div>
+                            <div class="phone-balance-row">
+                                <div class="phone-balance-pill inc">
+                                    Income<span>+₹45,000</span>
+                                </div>
+                                <div class="phone-balance-pill exp">
+                                    Expense<span>−₹18,240</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="phone-txlist">
+                            <div class="phone-tx">
+                                <div class="phone-tx-left">
+                                    <div class="phone-tx-icon">🛒</div>
+                                    <div>
+                                        <div class="phone-tx-name">Groceries</div>
+                                        <div class="phone-tx-cat">Food</div>
+                                    </div>
+                                </div>
+                                <span class="phone-tx-amount neg">−₹850</span>
+                            </div>
+                            <div class="phone-tx">
+                                <div class="phone-tx-left">
+                                    <div class="phone-tx-icon">💼</div>
+                                    <div>
+                                        <div class="phone-tx-name">Salary</div>
+                                        <div class="phone-tx-cat">Income</div>
+                                    </div>
+                                </div>
+                                <span class="phone-tx-amount pos">+₹45,000</span>
+                            </div>
+                            <div class="phone-tx">
+                                <div class="phone-tx-left">
+                                    <div class="phone-tx-icon">🚗</div>
+                                    <div>
+                                        <div class="phone-tx-name">Transport</div>
+                                        <div class="phone-tx-cat">Travel</div>
+                                    </div>
+                                </div>
+                                <span class="phone-tx-amount neg">−₹320</span>
+                            </div>
+                        </div>
+                        <div class="phone-tabbar">
+                            <div class="phone-tab active">Home<div class="phone-tab-dot"></div></div>
+                            <div class="phone-tab">Analytics</div>
+                            <div class="phone-tab">Splits</div>
+                            <div class="phone-tab">More</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
 
     <hr class="divider">
 
@@ -233,7 +486,7 @@
 
             <div class="features-grid">
 
-                <div class="feature-card">
+                <div class="feature-card" data-accent="salmon">
                     <span class="feature-icon">📷</span>
                     <h3>AI Receipt Scanning</h3>
                     <p>Snap a photo of any receipt and let AI auto-fill the amount, date, and title — no manual entry required.</p>
@@ -245,7 +498,7 @@
                     </ul>
                 </div>
 
-                <div class="feature-card">
+                <div class="feature-card" data-accent="green">
                     <span class="feature-icon">💸</span>
                     <h3>Expense & Income Tracking</h3>
                     <p>Log every transaction with full detail — categories, notes, images, and custom icons.</p>
@@ -257,7 +510,7 @@
                     </ul>
                 </div>
 
-                <div class="feature-card">
+                <div class="feature-card" data-accent="salmon">
                     <span class="feature-icon">💳</span>
                     <h3>Multi-Account Management</h3>
                     <p>Track all your accounts in one place — bank, cash, e-wallets, credit cards, and investments.</p>
@@ -268,7 +521,7 @@
                     </ul>
                 </div>
 
-                <div class="feature-card">
+                <div class="feature-card" data-accent="green">
                     <span class="feature-icon">📊</span>
                     <h3>Analytics & Insights</h3>
                     <p>Understand your spending patterns with interactive charts and flexible date filters.</p>
@@ -280,7 +533,7 @@
                     </ul>
                 </div>
 
-                <div class="feature-card">
+                <div class="feature-card" data-accent="green">
                     <span class="feature-icon">🎯</span>
                     <h3>Budgets & Savings Goals</h3>
                     <p>Set weekly, monthly, or yearly category budgets and savings targets — track progress in real time.</p>
@@ -291,7 +544,7 @@
                     </ul>
                 </div>
 
-                <div class="feature-card">
+                <div class="feature-card" data-accent="salmon">
                     <span class="feature-icon">🔄</span>
                     <h3>Recurring Transactions</h3>
                     <p>Automate subscriptions, bills, and any repeating transaction — processed automatically on app start.</p>
@@ -302,19 +555,27 @@
                     </ul>
                 </div>
 
-                <div class="feature-card">
-                    <span class="feature-icon">🌐</span>
-                    <h3>Split Tracker <span class="badge">Cloud</span></h3>
-                    <p>Splitwise-style group expense tracking with real-time sync — privacy-isolated from your local data.</p>
-                    <ul>
-                        <li>Create groups, invite members</li>
-                        <li>Equal, percentage, or exact splits</li>
-                        <li>Live balance summaries & settlement tracking</li>
-                        <li>Group activity feed with full history</li>
-                    </ul>
+                <!-- FEATURED: Split Tracker -->
+                <div class="feature-card featured" data-accent="salmon">
+                    <div class="featured-left">
+                        <span class="feature-icon">🌐</span>
+                        <h3>Split Tracker <span class="badge">Cloud</span></h3>
+                        <p>Splitwise-style group expense tracking with real-time sync — privacy-isolated from your local data. Create groups, invite members with a simple code, and settle balances without awkward conversations.</p>
+                    </div>
+                    <div class="featured-right">
+                        <ul>
+                            <li>Create groups, invite members instantly</li>
+                            <li>Equal, percentage, or exact splits</li>
+                            <li>Live balance summaries & settlement tracking</li>
+                            <li>Group activity feed with full history</li>
+                            <li>Multi-payer support per expense</li>
+                            <li>Real-time sync across all group members</li>
+                            <li>Isolated cloud module — personal data stays local</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div class="feature-card">
+                <div class="feature-card" data-accent="salmon">
                     <span class="feature-icon">🧾</span>
                     <h3>Bill Splitting <span class="badge">Local</span></h3>
                     <p>Split expenses with friends locally using equal, percentage, or exact amounts — instantly.</p>
@@ -325,7 +586,7 @@
                     </ul>
                 </div>
 
-                <div class="feature-card">
+                <div class="feature-card" data-accent="salmon">
                     <span class="feature-icon">🤝</span>
                     <h3>Loan Tracking</h3>
                     <p>Keep tabs on money lent to or borrowed from contacts, with repayment history and overdue detection.</p>
@@ -336,7 +597,7 @@
                     </ul>
                 </div>
 
-                <div class="feature-card">
+                <div class="feature-card" data-accent="salmon">
                     <span class="feature-icon">📅</span>
                     <h3>Calendar View</h3>
                     <p>Navigate your transaction history visually with monthly and week views and an activity heatmap.</p>
@@ -347,7 +608,7 @@
                     </ul>
                 </div>
 
-                <div class="feature-card">
+                <div class="feature-card" data-accent="green">
                     <span class="feature-icon">🏆</span>
                     <h3>Achievements & Streaks</h3>
                     <p>Stay motivated with gamification — earn badges for milestones and build your daily logging streak.</p>
@@ -358,7 +619,7 @@
                     </ul>
                 </div>
 
-                <div class="feature-card">
+                <div class="feature-card" data-accent="salmon">
                     <span class="feature-icon">🔔</span>
                     <h3>Smart Notifications</h3>
                     <p>Stay on top of your finances with timely reminders, budget alerts, and a full notification history.</p>
@@ -380,13 +641,10 @@
         <div class="container">
             <div class="privacy-highlight">
                 <div class="icon-big">🔒</div>
-                <div>
+                <div class="privacy-content">
                     <div class="section-label">Privacy First</div>
                     <h2 class="section-title" style="font-size: 1.9rem;">Your core data never leaves your device</h2>
-                    <p>Spendly requires no account, no sign-in, and no internet connection for core features. Every
-                        transaction, account, and budget is stored exclusively in your phone's local database using Isar —
-                        fast, encrypted, and 100% private. The optional cloud Split Tracker is fully isolated and only
-                        activates when you choose to enable it.</p>
+                    <p>Spendly requires no account, no sign-in, and no internet connection for core features. Every transaction, account, and budget is stored exclusively in your phone's local database using Isar — fast, encrypted, and 100% private. The optional cloud Split Tracker is fully isolated and only activates when you choose to enable it.</p>
                     <div class="privacy-pillars">
                         <span class="pillar">No cloud sync</span>
                         <span class="pillar">No account required</span>
@@ -402,7 +660,7 @@
 
     <hr class="divider">
 
-    <!-- PERSONALIZATION + MORE -->
+    <!-- MORE -->
     <section>
         <div class="container">
             <div class="section-label">More</div>
@@ -410,103 +668,18 @@
             <p class="section-subtitle">Personalize the look, protect your data, manage contacts, and export whenever you need.</p>
 
             <div class="mini-grid">
-
-                <div class="mini-card">
-                    <span class="mini-icon">🎨</span>
-                    <div>
-                        <h4>Dark & Light Themes</h4>
-                        <p>Full dark/light/system mode with true-black OLED option.</p>
-                    </div>
-                </div>
-
-                <div class="mini-card">
-                    <span class="mini-icon">🌈</span>
-                    <div>
-                        <h4>8 Color Schemes</h4>
-                        <p>Teal, Purple, Indigo, Pink, Coffee, Earthy, Wood, and more.</p>
-                    </div>
-                </div>
-
-                <div class="mini-card">
-                    <span class="mini-icon">🖼️</span>
-                    <div>
-                        <h4>Custom Category Icons</h4>
-                        <p>Pick from Material icons or use your own gallery images.</p>
-                    </div>
-                </div>
-
-                <div class="mini-card">
-                    <span class="mini-icon">🔤</span>
-                    <div>
-                        <h4>5 Font Size Levels</h4>
-                        <p>Scale all text from Small to XX-Large for your comfort.</p>
-                    </div>
-                </div>
-
-                <div class="mini-card">
-                    <span class="mini-icon">👆</span>
-                    <div>
-                        <h4>Biometric Lock</h4>
-                        <p>Secure the app with Face ID or fingerprint authentication.</p>
-                    </div>
-                </div>
-
-                <div class="mini-card">
-                    <span class="mini-icon">📤</span>
-                    <div>
-                        <h4>Export to PDF & CSV</h4>
-                        <p>Share or archive your transaction history and generate per-transaction receipts.</p>
-                    </div>
-                </div>
-
-                <div class="mini-card">
-                    <span class="mini-icon">💾</span>
-                    <div>
-                        <h4>Auto & Manual Backup</h4>
-                        <p>Scheduled daily encrypted backups with configurable retention count.</p>
-                    </div>
-                </div>
-
-                <div class="mini-card">
-                    <span class="mini-icon">🏠</span>
-                    <div>
-                        <h4>Home Screen Widgets</h4>
-                        <p>Budget, Quick Add, and Split Bill widgets right on your home screen.</p>
-                    </div>
-                </div>
-
-                <div class="mini-card">
-                    <span class="mini-icon">👤</span>
-                    <div>
-                        <h4>People & Contacts</h4>
-                        <p>Manage financial contacts linked to transactions, loans, and splits.</p>
-                    </div>
-                </div>
-
-                <div class="mini-card">
-                    <span class="mini-icon">💱</span>
-                    <div>
-                        <h4>Multi-Currency</h4>
-                        <p>Set your preferred currency for all transactions and reports.</p>
-                    </div>
-                </div>
-
-                <div class="mini-card">
-                    <span class="mini-icon">👁️</span>
-                    <div>
-                        <h4>Amounts Visibility Toggle</h4>
-                        <p>Hide all monetary values across the app with a single tap.</p>
-                    </div>
-                </div>
-
-                <div class="mini-card">
-                    <span class="mini-icon">⚡</span>
-                    <div>
-                        <h4>Blazing Fast</h4>
-                        <p>Built on Isar — high-performance local database with instant queries.</p>
-                    </div>
-                </div>
-
+                <div class="mini-card"><span class="mini-icon">🎨</span><div><h4>Dark & Light Themes</h4><p>Full dark/light/system mode with true-black OLED option.</p></div></div>
+                <div class="mini-card"><span class="mini-icon">🌈</span><div><h4>8 Color Schemes</h4><p>Teal, Purple, Indigo, Pink, Coffee, Earthy, Wood, and more.</p></div></div>
+                <div class="mini-card"><span class="mini-icon">🖼️</span><div><h4>Custom Category Icons</h4><p>Pick from Material icons or use your own gallery images.</p></div></div>
+                <div class="mini-card"><span class="mini-icon">🔤</span><div><h4>5 Font Size Levels</h4><p>Scale all text from Small to XX-Large for your comfort.</p></div></div>
+                <div class="mini-card"><span class="mini-icon">👆</span><div><h4>Biometric Lock</h4><p>Secure the app with Face ID or fingerprint authentication.</p></div></div>
+                <div class="mini-card"><span class="mini-icon">📤</span><div><h4>Export to PDF & CSV</h4><p>Share or archive your transaction history and generate per-transaction receipts.</p></div></div>
+                <div class="mini-card"><span class="mini-icon">💾</span><div><h4>Auto & Manual Backup</h4><p>Scheduled daily encrypted backups with configurable retention count.</p></div></div>
+                <div class="mini-card"><span class="mini-icon">🏠</span><div><h4>Home Screen Widgets</h4><p>Budget, Quick Add, and Split Bill widgets right on your home screen.</p></div></div>
+                <div class="mini-card"><span class="mini-icon">👤</span><div><h4>People & Contacts</h4><p>Manage financial contacts linked to transactions, loans, and splits.</p></div></div>
+                <div class="mini-card"><span class="mini-icon">💱</span><div><h4>Multi-Currency</h4><p>Set your preferred currency for all transactions and reports.</p></div></div>
+                <div class="mini-card"><span class="mini-icon">👁️</span><div><h4>Amounts Visibility Toggle</h4><p>Hide all monetary values across the app with a single tap.</p></div></div>
+                <div class="mini-card"><span class="mini-icon">⚡</span><div><h4>Blazing Fast</h4><p>Built on Isar — high-performance local database with instant queries.</p></div></div>
             </div>
         </div>
     </section>
@@ -514,13 +687,11 @@
     <hr class="divider">
 
     <!-- CTA -->
-    <section style="padding: 5rem 2rem;">
-        <div class="container" style="text-align: center;">
+    <section class="cta-section">
+        <div class="container">
             <h2 class="section-title">Start tracking smarter today</h2>
-            <p style="color: var(--text-dim); margin: 1rem auto 2.5rem; max-width: 460px;">No sign-up. No subscription.
-                Download Spendly for free and take control of your finances.</p>
-            <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" class="btn-primary"
-                target="_blank" rel="noopener" style="font-size: 1.05rem; padding: 1rem 2.5rem;">
+            <p>No sign-up. No subscription. Download Spendly for free and take control of your finances.</p>
+            <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" class="btn-primary large" target="_blank" rel="noopener">
                 ▶ Download on Google Play
             </a>
         </div>
