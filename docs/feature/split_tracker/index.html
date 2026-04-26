@@ -1,719 +1,833 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Split Tracker — Spendly</title>
-    <meta name="description"
-        content="Split expenses with friends in real time. Spendly's Split Tracker brings Splitwise-style group expense tracking with live sync — fully isolated from your private local data.">
-    <meta property="og:title" content="Split Tracker — Spendly">
-    <meta property="og:description"
-        content="Real-time group expense splitting with live sync, settlement tracking, and flexible split types — all privacy-isolated from your local finances.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tejnc.github.io/spendly/feature/split_tracker/">
-    <link rel="canonical" href="https://tejnc.github.io/spendly/feature/split_tracker/">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Split Tracker — Spendly</title>
+<meta name="description" content="Split expenses with friends in real time. Spendly's Split Tracker brings Splitwise-style group expense tracking with live sync — fully isolated from your private local data.">
+<meta property="og:title" content="Split Tracker — Spendly">
+<meta property="og:description" content="Real-time group expense splitting with live sync, settlement tracking, and flexible split types — all privacy-isolated from your local finances.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tejnc.github.io/spendly/feature/split_tracker/">
+<link rel="canonical" href="https://tejnc.github.io/spendly/feature/split_tracker/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        :root {
-            --salmon:       #E08B6A;
-            --salmon-light: #F2A882;
-            --salmon-pale:  rgba(224, 139, 106, 0.15);
-            --salmon-glow:  rgba(224, 139, 106, 0.09);
-            --green:        #5DB87A;
-            --green-pale:   rgba(93, 184, 122, 0.15);
-            --blue:         #6BA3D6;
-            --blue-pale:    rgba(107, 163, 214, 0.15);
-            --bg:           #0e0c0a;
-            --bg-card:      #161412;
-            --bg-elevated:  #1E1B18;
-            --border:       rgba(255, 255, 255, 0.08);
-            --border-warm:  rgba(224, 139, 106, 0.22);
-            --text:         #F5F0EA;
-            --text-muted:   rgba(245, 240, 234, 0.5);
-            --text-dim:     rgba(245, 240, 234, 0.7);
-        }
+:root {
+  --salmon: #E08B6A;
+  --salmon-light: #F2A882;
+  --salmon-pale: rgba(224,139,106,0.12);
+  --bg: #0e0c0a;
+  --surface: #1E1B18;
+  --surface2: #272320;
+  --surface3: #2f2b27;
+  --text: #F5F0EA;
+  --muted: rgba(245,240,234,0.5);
+  --muted2: rgba(245,240,234,0.25);
+  --green: #5DB87A;
+  --green-pale: rgba(93,184,122,0.15);
+  --blue: #6BA3D6;
+  --blue-pale: rgba(107,163,214,0.15);
+  --border: rgba(255,255,255,0.07);
+}
 
-        html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; }
 
-        body {
-            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: 3px; }
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px;
+  height: 68px;
+  background: rgba(14,12,10,0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--salmon); display: flex; align-items: center; justify-content: center;
+}
+.nav-name { font-size: 18px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a { font-size: 15px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+.nav-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 14px; color: var(--muted); text-decoration: none;
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 6px 14px; transition: all 0.2s;
+}
+.nav-back:hover { border-color: rgba(224,139,106,0.3); color: var(--salmon) !important; }
+.nav-cta {
+  background: var(--salmon); color: white;
+  font-size: 14px; font-weight: 600;
+  padding: 10px 22px; border-radius: 40px;
+  text-decoration: none; transition: opacity 0.2s;
+}
+.nav-cta:hover { opacity: 0.85; }
+.nav-hamburger {
+  display: none; flex-direction: column; justify-content: center; gap: 5px;
+  width: 36px; height: 36px; cursor: pointer; background: none; border: none; padding: 4px;
+}
+.nav-hamburger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--text); border-radius: 2px;
+  transition: transform 0.25s, opacity 0.25s;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        /* ── NAV ── */
-        nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            background: rgba(14, 12, 10, 0.88);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 0 2rem; height: 60px;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .nav-logo { font-size: 1.2rem; font-weight: 700; color: var(--salmon); letter-spacing: -0.03em; text-decoration: none; }
-        .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
-        .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
-        .nav-links a:hover { color: var(--salmon); }
-        .nav-back {
-            display: inline-flex; align-items: center; gap: 0.35rem;
-            font-size: 0.82rem; color: var(--text-muted);
-            border: 1px solid var(--border); border-radius: 8px;
-            padding: 0.3rem 0.75rem; transition: all 0.2s;
-        }
-        .nav-back:hover { border-color: var(--border-warm); color: var(--salmon) !important; }
+.mobile-menu {
+  display: none;
+  position: fixed; top: 68px; left: 0; right: 0; z-index: 99;
+  background: rgba(14,12,10,0.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  flex-direction: column;
+  padding: 16px 24px 24px;
+  gap: 4px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-size: 16px; font-weight: 500; color: var(--muted);
+  text-decoration: none; padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  transition: color 0.2s;
+}
+.mobile-menu a:last-child { border-bottom: none; }
+.mobile-menu a:hover { color: var(--text); }
+.mobile-menu .mobile-cta {
+  margin-top: 12px; text-align: center;
+  background: var(--salmon); color: white;
+  font-size: 15px; font-weight: 600;
+  padding: 14px; border-radius: 40px;
+  border-bottom: none;
+}
 
-        /* ── GLOW ── */
-        .hero-glow {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            pointer-events: none; z-index: 0;
-            background:
-                radial-gradient(ellipse 55% 45% at 20% 15%, rgba(224, 139, 106, 0.08) 0%, transparent 70%),
-                radial-gradient(ellipse 40% 35% at 80% 80%, rgba(107,163,214,0.05) 0%, transparent 70%);
-        }
+/* ─── BREADCRUMB ─── */
+.breadcrumb {
+  padding: 92px 80px 0;
+  max-width: 1280px; margin: 0 auto;
+  position: relative; z-index: 1;
+}
+.breadcrumb-inner {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--muted2);
+}
+.breadcrumb-inner a { color: var(--muted2); text-decoration: none; transition: color 0.2s; }
+.breadcrumb-inner a:hover { color: var(--salmon); }
+.breadcrumb-inner span { opacity: 0.4; }
+.breadcrumb-inner strong { color: var(--salmon); font-weight: 600; }
 
-        /* ── BREADCRUMB ── */
-        .breadcrumb {
-            position: relative; z-index: 1;
-            padding: 80px 5rem 0;
-            max-width: 1280px; margin: 0 auto;
-        }
-        .breadcrumb-inner {
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            font-size: 0.78rem; color: var(--text-muted);
-        }
-        .breadcrumb-inner a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
-        .breadcrumb-inner a:hover { color: var(--salmon); }
-        .breadcrumb-inner span { opacity: 0.4; }
-        .breadcrumb-inner strong { color: var(--salmon); font-weight: 600; }
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 80px;
+  padding: 32px 80px 80px;
+  max-width: 1280px;
+  margin: 0 auto;
+  position: relative; z-index: 1;
+}
+.hero-glow {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 55% 45% at 20% 15%, rgba(224,139,106,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 35% at 80% 80%, rgba(107,163,214,0.05) 0%, transparent 70%);
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--green-pale);
+  border: 1px solid rgba(93,184,122,0.25);
+  color: var(--green);
+  font-size: 12px; font-weight: 600;
+  padding: 6px 16px; border-radius: 40px;
+  margin-bottom: 28px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.hero-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        /* ── HERO ── */
-        .hero {
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            gap: 4rem;
-            padding: 40px 5rem 4rem;
-            max-width: 1280px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-        .hero-content { display: flex; flex-direction: column; align-items: flex-start; }
-        .hero-badge {
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            background: var(--salmon-pale); border: 1px solid var(--border-warm);
-            color: var(--salmon); font-size: 0.75rem; font-weight: 600;
-            padding: 0.35rem 0.95rem; border-radius: 999px; margin-bottom: 2rem;
-            letter-spacing: 0.05em; text-transform: uppercase;
-        }
-        .hero h1 {
-            font-size: clamp(2.8rem, 5.5vw, 4.8rem); font-weight: 800;
-            letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 1.5rem;
-            background: linear-gradient(140deg, var(--text) 30%, var(--salmon) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .hero p {
-            font-size: 1.05rem; color: var(--text-dim); max-width: 480px;
-            margin-bottom: 2.5rem; line-height: 1.8; font-weight: 400;
-        }
-        .hero-cta { display: flex; gap: 0.85rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+h1.hero-title {
+  font-size: clamp(2.8rem, 5.5vw, 4.8rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  margin-bottom: 24px;
+  background: linear-gradient(140deg, var(--text) 30%, var(--salmon) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-sub {
+  font-size: 17px; color: var(--muted);
+  max-width: 480px; margin-bottom: 40px;
+  line-height: 1.75; font-weight: 400;
+}
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 40px; }
 
-        .btn-primary {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            background: var(--salmon); color: #0e0c0a;
-            text-decoration: none; font-weight: 700; font-size: 0.95rem;
-            padding: 0.8rem 1.75rem; border-radius: 12px; transition: all 0.2s;
-            letter-spacing: -0.01em;
-        }
-        .btn-primary:hover {
-            background: var(--salmon-light); transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(224, 139, 106, 0.32);
-        }
-        .btn-secondary {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            background: transparent; color: var(--text-dim); text-decoration: none;
-            font-weight: 500; font-size: 0.95rem; padding: 0.8rem 1.75rem;
-            border-radius: 12px; border: 1px solid var(--border); transition: all 0.2s;
-        }
-        .btn-secondary:hover { border-color: var(--border-warm); color: var(--salmon); }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--salmon); color: white;
+  font-size: 15px; font-weight: 600;
+  padding: 14px 28px; border-radius: 50px;
+  text-decoration: none; transition: transform 0.15s, opacity 0.15s;
+}
+.btn-primary:hover { transform: translateY(-1px); opacity: 0.9; }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--muted); font-size: 15px; font-weight: 500;
+  text-decoration: none; transition: color 0.2s;
+  border: 1px solid var(--border); padding: 14px 20px; border-radius: 50px;
+}
+.btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
 
-        .hero-stats {
-            display: flex; background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
-        }
-        .stat { text-align: center; padding: 1rem 1.4rem; border-right: 1px solid var(--border); }
-        .stat:last-child { border-right: none; }
-        .stat-value { font-size: 1.45rem; font-weight: 800; color: var(--salmon); letter-spacing: -0.04em; display: block; line-height: 1.2; }
-        .stat-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; display: block; margin-top: 0.25rem; }
+.hero-stats {
+  display: flex;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+}
+.stat { text-align: center; padding: 16px 22px; border-right: 1px solid var(--border); }
+.stat:last-child { border-right: none; }
+.stat-value { font-size: 1.45rem; font-weight: 800; color: var(--salmon); letter-spacing: -0.04em; display: block; line-height: 1.2; }
+.stat-label { font-size: 11px; color: var(--muted2); text-transform: uppercase; letter-spacing: 0.07em; display: block; margin-top: 4px; }
 
-        /* ── PHONE MOCKUP ── */
-        .hero-visual { display: flex; align-items: center; justify-content: center; }
-        .phone-wrap {
-            width: 270px;
-            transform: perspective(1000px) rotateY(-8deg) rotateX(2deg);
-            transition: transform 0.5s ease;
-        }
-        .phone-wrap:hover { transform: perspective(1000px) rotateY(-3deg) rotateX(1deg); }
-        .phone-frame {
-            background: var(--bg-elevated);
-            border: 1.5px solid rgba(224,139,106,0.35);
-            border-radius: 36px; padding: 10px;
-            box-shadow:
-                0 48px 96px rgba(0,0,0,0.65),
-                0 0 0 1px rgba(255,255,255,0.04),
-                inset 0 1px 0 rgba(255,255,255,0.07);
-        }
-        .phone-screen { background: var(--bg-card); border-radius: 28px; overflow: hidden; padding-bottom: 14px; }
-        .phone-topbar {
-            background: #1a1714; padding: 13px 18px 11px;
-            display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid var(--border);
-        }
-        .phone-topbar-title { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
-        .phone-topbar-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--salmon); opacity: 0.75; }
+/* ─── PHONE MOCKUP ─── */
+.hero-visual { display: flex; align-items: center; justify-content: center; }
 
-        /* Split Tracker phone mockup components */
-        .phone-st-header {
-            padding: 12px 14px 8px;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .phone-st-title { font-size: 0.78rem; font-weight: 700; color: var(--text); }
-        .phone-st-btn {
-            font-size: 0.56rem; font-weight: 700; background: var(--salmon);
-            color: #0e0c0a; padding: 3px 8px; border-radius: 6px;
-        }
-        .phone-group-card {
-            margin: 4px 13px; border-radius: 12px; padding: 10px 12px;
-            background: var(--bg-elevated); border: 1px solid var(--border);
-            display: flex; align-items: center; gap: 9px;
-        }
-        .phone-group-avatar {
-            width: 30px; height: 30px; border-radius: 9px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.85rem; flex-shrink: 0;
-        }
-        .phone-group-info { flex: 1; min-width: 0; }
-        .phone-group-name { font-size: 0.68rem; font-weight: 600; color: var(--text); }
-        .phone-group-meta { font-size: 0.56rem; color: var(--text-muted); margin-top: 1px; }
-        .phone-group-balance {
-            font-size: 0.62rem; font-weight: 700; padding: 2px 6px;
-            border-radius: 5px; flex-shrink: 0;
-        }
-        .phone-group-balance.owe { background: rgba(224,139,106,0.18); color: var(--salmon); }
-        .phone-group-balance.owed { background: rgba(93,184,122,0.18); color: var(--green); }
-        .phone-group-balance.settled { background: rgba(255,255,255,0.07); color: var(--text-muted); }
-        .phone-tabbar {
-            margin: 10px 13px 0;
-            background: var(--bg-elevated); border-radius: 13px; padding: 7px 10px;
-            display: flex; justify-content: space-around; border: 1px solid var(--border);
-        }
-        .phone-tab { font-size: 0.56rem; color: var(--text-muted); text-align: center; font-weight: 500; padding: 2px 3px; }
-        .phone-tab.active { color: var(--salmon); }
-        .phone-tab-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--salmon); margin: 3px auto 0; }
+@keyframes phoneHover {
+  0%, 100% { transform: perspective(1000px) rotateY(-8deg) rotateX(2deg) translateY(0px);
+              filter: drop-shadow(0 48px 80px rgba(0,0,0,0.65)); }
+  50%       { transform: perspective(1000px) rotateY(-8deg) rotateX(2deg) translateY(-18px);
+              filter: drop-shadow(0 64px 100px rgba(0,0,0,0.45)); }
+}
+.phone-wrap {
+  width: 270px;
+  animation: phoneHover 4s ease-in-out infinite;
+}
+.phone-frame {
+  background: var(--surface);
+  border: 1.5px solid rgba(224,139,106,0.35);
+  border-radius: 36px; padding: 10px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+}
+.phone-screen { background: #161412; border-radius: 28px; overflow: hidden; padding-bottom: 14px; }
+.phone-topbar {
+  background: #1a1714; padding: 13px 18px 11px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.phone-topbar-title { font-size: 10px; font-weight: 600; color: var(--muted2); letter-spacing: 0.07em; text-transform: uppercase; }
+.phone-topbar-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 3px var(--green-pale); animation: pulse 2s infinite; }
 
-        /* ── SHARED SECTION STYLES ── */
-        section { padding: 6rem 2rem; }
-        .container { max-width: 1100px; margin: 0 auto; }
-        .section-label { font-size: 0.72rem; font-weight: 600; color: var(--salmon); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 0.75rem; }
-        .section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.04em; margin-bottom: 1rem; line-height: 1.15; }
-        .section-subtitle { font-size: 1rem; color: var(--text-dim); max-width: 520px; line-height: 1.8; font-weight: 400; }
+.phone-st-header {
+  padding: 12px 14px 8px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.phone-st-title { font-size: 12px; font-weight: 700; color: var(--text); }
+.phone-st-btn {
+  font-size: 9px; font-weight: 700; background: var(--salmon);
+  color: white; padding: 3px 8px; border-radius: 6px;
+}
+.phone-group-card {
+  margin: 4px 13px; border-radius: 12px; padding: 10px 12px;
+  background: var(--surface); border: 1px solid var(--border);
+  display: flex; align-items: center; gap: 9px;
+}
+.phone-group-avatar {
+  width: 30px; height: 30px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.phone-group-info { flex: 1; min-width: 0; }
+.phone-group-name { font-size: 11px; font-weight: 600; color: var(--text); }
+.phone-group-meta { font-size: 9px; color: var(--muted2); margin-top: 1px; }
+.phone-group-balance {
+  font-size: 10px; font-weight: 700; padding: 2px 7px;
+  border-radius: 6px; flex-shrink: 0;
+}
+.phone-group-balance.owe    { background: rgba(224,139,106,0.18); color: var(--salmon); }
+.phone-group-balance.owed   { background: rgba(93,184,122,0.18);  color: var(--green); }
+.phone-group-balance.settled{ background: rgba(255,255,255,0.07); color: var(--muted2); }
 
-        /* ── HOW IT WORKS ── */
-        .steps-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem; margin-top: 3.5rem;
-        }
-        .step-card {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 18px; padding: 2rem 1.75rem;
-            position: relative; overflow: hidden;
-            transition: all 0.25s;
-        }
-        .step-card:hover { transform: translateY(-4px); border-color: rgba(224,139,106,0.2); box-shadow: 0 16px 48px rgba(0,0,0,0.4); }
-        .step-number {
-            font-size: 3.5rem; font-weight: 900; line-height: 1;
-            color: rgba(224,139,106,0.12); letter-spacing: -0.06em;
-            margin-bottom: 1.25rem; display: block;
-        }
-        .step-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 0.6rem; }
-        .step-card p { font-size: 0.875rem; color: var(--text-dim); line-height: 1.72; }
-        .step-icon { font-size: 1.5rem; margin-bottom: 0.85rem; display: block; }
+.phone-tabbar {
+  margin: 10px 13px 0;
+  background: var(--surface); border-radius: 13px; padding: 7px 10px;
+  display: flex; justify-content: space-around; border: 1px solid var(--border);
+}
+.phone-tab { font-size: 9px; color: var(--muted2); text-align: center; font-weight: 500; padding: 2px 3px; }
+.phone-tab.active { color: var(--salmon); }
+.phone-tab-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--salmon); margin: 3px auto 0; }
 
-        /* connector arrows between steps */
-        .steps-wrapper { position: relative; }
-        .step-connector {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            color: var(--text-muted); font-size: 1rem; opacity: 0.3;
-            pointer-events: none;
-        }
-        .step-connector.c1 { left: calc(33.33% - 0.5rem); }
-        .step-connector.c2 { left: calc(66.66% - 0.5rem); }
+/* ─── SECTION COMMON ─── */
+.divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+section { padding: 100px 80px; }
+.container { max-width: 1100px; margin: 0 auto; }
 
-        /* ── FEATURE CARDS ── */
-        .features-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 1.25rem; margin-top: 3.5rem;
-        }
-        .feature-card {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 18px; padding: 1.75rem;
-            transition: all 0.25s; position: relative; overflow: hidden;
-        }
-        .feature-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            opacity: 0; transition: opacity 0.3s;
-        }
-        .feature-card[data-accent="salmon"]::before { background: linear-gradient(90deg, transparent, var(--salmon), transparent); }
-        .feature-card[data-accent="green"]::before  { background: linear-gradient(90deg, transparent, var(--green), transparent); }
-        .feature-card[data-accent="blue"]::before   { background: linear-gradient(90deg, transparent, var(--blue), transparent); }
-        .feature-card:hover { transform: translateY(-4px); }
-        .feature-card:hover::before { opacity: 1; }
-        .feature-card[data-accent="salmon"]:hover { border-color: rgba(224,139,106,0.25); box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 32px rgba(224,139,106,0.07); }
-        .feature-card[data-accent="green"]:hover  { border-color: rgba(93,184,122,0.25);  box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 32px rgba(93,184,122,0.07); }
-        .feature-card[data-accent="blue"]:hover   { border-color: rgba(107,163,214,0.25); box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 32px rgba(107,163,214,0.07); }
+.section-eyebrow {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--salmon); margin-bottom: 16px;
+}
+.section-title {
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 700; line-height: 1.1;
+  letter-spacing: -0.025em; color: var(--text);
+  text-wrap: balance; margin-bottom: 20px;
+}
+.section-sub {
+  font-size: 18px; color: var(--muted);
+  max-width: 540px; line-height: 1.6;
+}
 
-        .feature-icon { font-size: 1.75rem; margin-bottom: 1rem; display: block; }
-        .feature-card[data-accent="salmon"] h3 { color: var(--salmon); }
-        .feature-card[data-accent="green"] h3  { color: var(--green); }
-        .feature-card[data-accent="blue"] h3   { color: var(--blue); }
-        .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
-        .feature-card p { font-size: 0.875rem; color: var(--text-dim); line-height: 1.72; }
-        .feature-card ul { list-style: none; margin-top: 0.9rem; }
-        .feature-card ul li { font-size: 0.84rem; color: var(--text-dim); padding: 0.2rem 0; display: flex; align-items: flex-start; gap: 0.5rem; }
-        .feature-card[data-accent="salmon"] ul li::before { content: '›'; color: var(--salmon); font-weight: 700; flex-shrink: 0; }
-        .feature-card[data-accent="green"] ul li::before  { content: '›'; color: var(--green);  font-weight: 700; flex-shrink: 0; }
-        .feature-card[data-accent="blue"] ul li::before   { content: '›'; color: var(--blue);   font-weight: 700; flex-shrink: 0; }
+/* ─── HOW IT WORKS ─── */
+.steps-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 2px; margin-top: 56px;
+}
+.step-card {
+  background: var(--surface); padding: 40px 36px;
+  transition: background 0.2s;
+}
+.step-card:first-child { border-radius: 20px 0 0 20px; }
+.step-card:last-child  { border-radius: 0 20px 20px 0; }
+.step-card:hover { background: var(--surface2); }
+.step-number {
+  font-size: 72px; font-weight: 800; letter-spacing: -0.04em;
+  color: rgba(224,139,106,0.12); line-height: 1; margin-bottom: 20px; display: block;
+}
+.step-icon { font-size: 28px; margin-bottom: 16px; display: block; }
+.step-card h3 { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+.step-card p  { font-size: 15px; color: var(--muted); line-height: 1.6; }
 
-        /* FEATURED: Privacy card */
-        .feature-card.featured {
-            grid-column: 1 / -1;
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 0; align-items: start;
-            background: linear-gradient(135deg, #1E1B18 0%, #161412 100%);
-            border-color: rgba(224,139,106,0.2); padding: 2.25rem;
-        }
-        .feature-card.featured::after {
-            content: ''; position: absolute; right: -80px; top: -80px;
-            width: 360px; height: 360px;
-            background: radial-gradient(circle, rgba(224,139,106,0.06) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .feature-card.featured h3 { font-size: 1.2rem; margin-bottom: 0.65rem; }
-        .feature-card.featured p { font-size: 0.9rem; max-width: 400px; }
-        .featured-right {
-            border-left: 1px solid var(--border);
-            padding-left: 2.25rem;
-        }
-        .featured-right ul li { font-size: 0.875rem; }
+/* ─── FEATURE CARDS ─── */
+.features-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 14px; margin-top: 56px;
+}
+.feature-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; padding: 28px;
+  transition: all 0.25s; position: relative; overflow: hidden;
+}
+.feature-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  opacity: 0; transition: opacity 0.3s;
+}
+.feature-card[data-accent="salmon"]::before { background: linear-gradient(90deg, transparent, var(--salmon), transparent); }
+.feature-card[data-accent="green"]::before  { background: linear-gradient(90deg, transparent, var(--green),  transparent); }
+.feature-card[data-accent="blue"]::before   { background: linear-gradient(90deg, transparent, var(--blue),   transparent); }
+.feature-card:hover { transform: translateY(-4px); }
+.feature-card:hover::before { opacity: 1; }
+.feature-card[data-accent="salmon"]:hover { border-color: rgba(224,139,106,0.25); box-shadow: 0 16px 48px rgba(0,0,0,0.4); }
+.feature-card[data-accent="green"]:hover  { border-color: rgba(93,184,122,0.25);  box-shadow: 0 16px 48px rgba(0,0,0,0.4); }
+.feature-card[data-accent="blue"]:hover   { border-color: rgba(107,163,214,0.25); box-shadow: 0 16px 48px rgba(0,0,0,0.4); }
 
-        .badge {
-            display: inline-block; font-size: 0.58rem; font-weight: 700;
-            letter-spacing: 0.08em; text-transform: uppercase;
-            padding: 0.15rem 0.5rem; border-radius: 5px;
-            vertical-align: middle; margin-left: 0.4rem;
-            background: var(--salmon-pale); color: var(--salmon); border: 1px solid var(--border-warm);
-        }
-        .badge.green { background: var(--green-pale); color: var(--green); border-color: rgba(93,184,122,0.3); }
+.feature-icon { font-size: 28px; margin-bottom: 16px; display: block; }
+.feature-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+.feature-card[data-accent="salmon"] h3 { color: var(--salmon); }
+.feature-card[data-accent="green"]  h3 { color: var(--green); }
+.feature-card[data-accent="blue"]   h3 { color: var(--blue); }
+.feature-card p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.feature-card ul { list-style: none; margin-top: 14px; }
+.feature-card ul li {
+  font-size: 14px; color: var(--muted); padding: 4px 0;
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.feature-card[data-accent="salmon"] ul li::before { content: '›'; color: var(--salmon); font-weight: 700; flex-shrink: 0; }
+.feature-card[data-accent="green"]  ul li::before { content: '›'; color: var(--green);  font-weight: 700; flex-shrink: 0; }
+.feature-card[data-accent="blue"]   ul li::before { content: '›'; color: var(--blue);   font-weight: 700; flex-shrink: 0; }
 
-        /* ── PRIVACY ── */
-        .privacy-highlight {
-            position: relative;
-            background: linear-gradient(135deg, #1E1B18 0%, #161412 100%);
-            border-radius: 24px; padding: 4rem 3rem;
-            display: flex; gap: 3rem; align-items: center; flex-wrap: wrap;
-            overflow: hidden;
-        }
-        .privacy-highlight::before {
-            content: ''; position: absolute; inset: 0; border-radius: 24px;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(224,139,106,0.3), rgba(255,255,255,0.05), rgba(93,184,122,0.12));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
-        }
-        .privacy-highlight::after {
-            content: ''; position: absolute; right: -60px; top: -60px;
-            width: 320px; height: 320px;
-            background: radial-gradient(circle, rgba(224,139,106,0.07) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .privacy-highlight .icon-big { font-size: 4.5rem; flex-shrink: 0; position: relative; z-index: 1; }
-        .privacy-content { flex: 1; min-width: 280px; position: relative; z-index: 1; }
-        .privacy-highlight h2 { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0.75rem; }
-        .privacy-highlight p { color: var(--text-dim); font-size: 1rem; line-height: 1.78; max-width: 500px; }
-        .privacy-pillars { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 1.5rem; }
-        .pillar {
-            background: var(--salmon-pale); border: 1px solid var(--border-warm);
-            color: var(--salmon); font-size: 0.78rem; font-weight: 600;
-            padding: 0.35rem 0.85rem; border-radius: 8px; letter-spacing: 0.01em;
-        }
+.feature-card.featured {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0; align-items: start;
+  background: linear-gradient(135deg, var(--surface) 0%, #161412 100%);
+  border-color: rgba(224,139,106,0.2); padding: 36px;
+}
+.feature-card.featured::after {
+  content: ''; position: absolute; right: -80px; top: -80px;
+  width: 360px; height: 360px;
+  background: radial-gradient(circle, rgba(224,139,106,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.feature-card.featured h3 { font-size: 20px; margin-bottom: 10px; }
+.feature-card.featured p  { font-size: 15px; max-width: 400px; }
+.featured-right { border-left: 1px solid var(--border); padding-left: 36px; }
+.featured-right ul li { font-size: 14px; }
 
-        .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+.badge {
+  display: inline-block; font-size: 9px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 5px;
+  vertical-align: middle; margin-left: 6px;
+  background: var(--salmon-pale); color: var(--salmon); border: 1px solid rgba(224,139,106,0.25);
+}
 
-        /* ── CTA ── */
-        .cta-section {
-            padding: 6rem 2rem;
-            background: linear-gradient(135deg, #1E1B18 0%, #0e0c0a 100%);
-            text-align: center; position: relative; overflow: hidden;
-        }
-        .cta-section::before {
-            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 700px; height: 400px;
-            background: radial-gradient(ellipse, rgba(224,139,106,0.08) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .cta-section .container { position: relative; z-index: 1; }
-        .cta-section p { color: var(--text-dim); margin: 1rem auto 2.5rem; max-width: 460px; font-size: 1.05rem; }
-        .btn-primary.large { font-size: 1rem; padding: 1rem 2.5rem; border-radius: 14px; }
+/* ─── PRIVACY ─── */
+.privacy-highlight {
+  position: relative;
+  background: var(--surface);
+  border-radius: 24px; padding: 4rem 3rem;
+  display: flex; gap: 3rem; align-items: center; flex-wrap: wrap;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.privacy-highlight::before {
+  content: ''; position: absolute; inset: 0; border-radius: 24px; padding: 1px;
+  background: linear-gradient(135deg, rgba(224,139,106,0.3), rgba(255,255,255,0.05), rgba(93,184,122,0.12));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+}
+.privacy-highlight::after {
+  content: ''; position: absolute; right: -60px; top: -60px;
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(224,139,106,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.privacy-highlight .icon-big { font-size: 4.5rem; flex-shrink: 0; position: relative; z-index: 1; }
+.privacy-content { flex: 1; min-width: 280px; position: relative; z-index: 1; }
+.privacy-highlight h2 { font-size: clamp(24px, 3vw, 36px); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; }
+.privacy-highlight p  { color: var(--muted); font-size: 16px; line-height: 1.75; max-width: 500px; }
+.privacy-chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+.privacy-chip {
+  background: var(--salmon-pale); border: 1px solid rgba(224,139,106,0.25);
+  color: var(--salmon); font-size: 13px; font-weight: 600;
+  padding: 6px 16px; border-radius: 40px; letter-spacing: 0.01em;
+}
 
-        /* ── FOOTER ── */
-        footer { background: var(--bg-card); border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; }
-        .footer-logo { font-size: 1.5rem; font-weight: 800; color: var(--salmon); margin-bottom: 0.5rem; letter-spacing: -0.04em; }
-        .footer-tagline { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 2rem; }
-        .footer-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem; }
-        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
-        .footer-links a:hover { color: var(--salmon); }
-        .footer-copy { font-size: 0.78rem; color: var(--text-muted); }
+/* ─── CTA ─── */
+.cta-section {
+  background: var(--surface); padding: 100px 80px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.cta-glow {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(224,139,106,0.1) 0%, transparent 65%);
+  pointer-events: none;
+}
+.cta-section .section-title { margin: 0 auto 16px; }
+.cta-section p { color: var(--muted); margin: 0 auto 40px; max-width: 460px; font-size: 18px; line-height: 1.6; }
+.cta-note { font-size: 13px; color: var(--muted2); margin-top: 20px; }
 
-        /* ── RESPONSIVE ── */
-        @media (max-width: 960px) {
-            .features-grid { grid-template-columns: repeat(2, 1fr); }
-            .feature-card.featured { grid-template-columns: 1fr; }
-            .featured-right { border-left: none; border-top: 1px solid var(--border); padding-left: 0; padding-top: 1.5rem; margin-top: 0.5rem; }
-            .steps-grid { grid-template-columns: 1fr; }
-            .step-connector { display: none; }
-        }
+/* ─── FOOTER ─── */
+footer {
+  background: var(--bg); padding: 40px 80px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 20px;
+}
+.footer-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.footer-brand-name { font-size: 16px; font-weight: 600; color: var(--muted); }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { font-size: 13px; color: var(--muted2); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--muted); }
+.footer-copy { font-size: 13px; color: var(--muted2); }
 
-        @media (max-width: 800px) {
-            .hero { grid-template-columns: 1fr; padding: 20px 1.75rem 4rem; text-align: center; gap: 3rem; }
-            .hero-content { align-items: center; }
-            .hero p { max-width: 100%; }
-            .hero-visual { order: -1; }
-            .phone-wrap { width: 220px; transform: none; }
-            .phone-wrap:hover { transform: none; }
-            .breadcrumb { padding: 80px 1.75rem 0; }
-        }
+/* ─── SCROLL ANIMATIONS ─── */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
 
-        @media (max-width: 640px) {
-            nav { padding: 0 1.25rem; }
-            .nav-links { gap: 1.25rem; }
-            section { padding: 4rem 1.25rem; }
-            .features-grid { grid-template-columns: 1fr; }
-            .privacy-highlight { padding: 2.5rem 1.75rem; flex-direction: column; gap: 1.5rem; }
-            .privacy-highlight .icon-big { font-size: 3.5rem; }
-            .hero-stats { width: 100%; }
-            .stat { flex: 1; padding: 0.85rem 0.5rem; }
-            .stat-value { font-size: 1.2rem; }
-        }
-    </style>
+/* ─── RESPONSIVE ─── */
+@media (max-width: 960px) {
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .feature-card.featured { grid-template-columns: 1fr; }
+  .featured-right { border-left: none; border-top: 1px solid var(--border); padding-left: 0; padding-top: 24px; margin-top: 8px; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .step-card:first-child { border-radius: 20px 20px 0 0; }
+  .step-card:last-child  { border-radius: 0 0 20px 20px; }
+}
+
+@media (max-width: 900px) {
+  nav { padding: 0 24px; }
+  nav .nav-links { display: none; }
+  nav .nav-cta { display: none; }
+  .nav-hamburger { display: flex; }
+  .hero { grid-template-columns: 1fr; padding: 20px 24px 60px; gap: 48px; }
+  .hero-visual { order: -1; }
+  .phone-wrap { width: 220px; animation: none; transform: none; }
+  .breadcrumb { padding: 88px 24px 0; }
+  section { padding: 72px 24px; }
+  footer { padding: 32px 24px; }
+  .cta-section { padding: 72px 24px; }
+}
+
+@media (max-width: 640px) {
+  .features-grid { grid-template-columns: 1fr; }
+  .privacy-highlight { padding: 2.5rem 1.75rem; flex-direction: column; gap: 1.5rem; }
+  .privacy-highlight .icon-big { font-size: 3.5rem; }
+  .hero-stats { width: 100%; }
+  .stat { flex: 1; padding: 12px 8px; }
+  .stat-value { font-size: 1.2rem; }
+}
+</style>
 </head>
-
 <body>
 
-    <div class="hero-glow"></div>
+<div class="hero-glow"></div>
 
-    <!-- NAV -->
-    <nav>
-        <a href="/spendly/" class="nav-logo">Spendly</a>
-        <ul class="nav-links">
-            <li><a href="#how-it-works">How It Works</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#privacy">Privacy</a></li>
-            <li><a href="/spendly/" class="nav-back">← All Features</a></li>
+<!-- ─── NAV ─── -->
+<nav>
+  <a class="nav-brand" href="../../">
+    <div class="nav-icon" style="padding:0;overflow:hidden;"><img src="../../spendly.webp" alt="Spendly" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+    <span class="nav-name">Spendly</span>
+  </a>
+  <div class="nav-links">
+    <a href="#how-it-works">How It Works</a>
+    <a href="#features">Features</a>
+    <a href="#privacy">Privacy</a>
+    <a href="../../" class="nav-back">&#8592; Back to Spendly</a>
+  </div>
+  <a class="nav-cta" href="https://play.google.com/store/apps/details?id=com.tejnc.spendly">&#9654; Get on Google Play</a>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#how-it-works" class="mobile-link">How It Works</a>
+  <a href="#features" class="mobile-link">Features</a>
+  <a href="#privacy" class="mobile-link">Privacy</a>
+  <a href="../../" class="mobile-link">&#8592; Back to Spendly</a>
+  <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" class="mobile-cta">&#9654; &nbsp;Get on Google Play</a>
+</div>
+
+<!-- ─── BREADCRUMB ─── -->
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="../../">Spendly</a>
+    <span>›</span>
+    <a href="../../#features">Features</a>
+    <span>›</span>
+    <strong>Split Tracker</strong>
+  </div>
+</div>
+
+<!-- ─── HERO ─── -->
+<div class="hero">
+  <div class="hero-content reveal">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Live Cloud Feature
+    </div>
+    <h1 class="hero-title">Split expenses.<br>Stay in sync.</h1>
+    <p class="hero-sub">Spendly's Split Tracker brings Splitwise-style group expense tracking with real-time sync. Create groups, add shared expenses, and settle balances — all fully isolated from your private local finances.</p>
+    <div class="hero-actions">
+      <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" class="btn-primary">&#9654; &nbsp;Get on Google Play</a>
+      <a href="../../" class="btn-ghost">&#8592; Back to Spendly</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-value">Live</span>
+        <span class="stat-label">Real-time sync</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">3</span>
+        <span class="stat-label">Split types</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">0</span>
+        <span class="stat-label">Local exposure</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">Free</span>
+        <span class="stat-label">To use</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual reveal reveal-delay-1">
+    <div class="phone-wrap">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-topbar">
+            <span class="phone-topbar-title">Split Tracker</span>
+            <span class="phone-topbar-dot"></span>
+          </div>
+          <div class="phone-st-header">
+            <span class="phone-st-title">My Groups</span>
+            <span class="phone-st-btn">+ New</span>
+          </div>
+          <div class="phone-group-card">
+            <div class="phone-group-avatar" style="background:rgba(224,139,106,0.18);">&#127958;&#65039;</div>
+            <div class="phone-group-info">
+              <div class="phone-group-name">Goa Trip</div>
+              <div class="phone-group-meta">4 members · 6 expenses</div>
+            </div>
+            <div class="phone-group-balance owe">&#8722;&#8377;840</div>
+          </div>
+          <div class="phone-group-card">
+            <div class="phone-group-avatar" style="background:rgba(93,184,122,0.18);">&#127968;</div>
+            <div class="phone-group-info">
+              <div class="phone-group-name">Flat Expenses</div>
+              <div class="phone-group-meta">3 members · 12 expenses</div>
+            </div>
+            <div class="phone-group-balance owed">+&#8377;1,200</div>
+          </div>
+          <div class="phone-group-card">
+            <div class="phone-group-avatar" style="background:rgba(107,163,214,0.18);">&#127829;</div>
+            <div class="phone-group-info">
+              <div class="phone-group-name">Friday Dinners</div>
+              <div class="phone-group-meta">5 members · 3 expenses</div>
+            </div>
+            <div class="phone-group-balance settled">Settled</div>
+          </div>
+          <div class="phone-tabbar">
+            <div class="phone-tab active">Groups<div class="phone-tab-dot"></div></div>
+            <div class="phone-tab">Activity</div>
+            <div class="phone-tab">Profile</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ─── HOW IT WORKS ─── -->
+<section id="how-it-works">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-eyebrow">How It Works</div>
+      <h2 class="section-title">Up and splitting in seconds</h2>
+      <p class="section-sub">No complicated onboarding. Create a group, share the code, start adding expenses.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <span class="step-number">01</span>
+        <span class="step-icon">&#128101;</span>
+        <h3>Create a group &amp; invite</h3>
+        <p>Start a group for a trip, flat, or any shared expense. Share the invite code with friends — they join instantly, no account friction.</p>
+      </div>
+      <div class="step-card reveal reveal-delay-1">
+        <span class="step-number">02</span>
+        <span class="step-icon">&#10133;</span>
+        <h3>Add expenses your way</h3>
+        <p>Log any shared expense and choose how to split it — equally, by exact amounts, or by percentage. Support for multiple payers per expense.</p>
+      </div>
+      <div class="step-card reveal reveal-delay-2">
+        <span class="step-number">03</span>
+        <span class="step-icon">&#9989;</span>
+        <h3>Track balances &amp; settle</h3>
+        <p>See who owes what at a glance. Record settlements between members, watch balances update in real time, and clear the slate without awkward conversations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ─── FEATURES ─── -->
+<section id="features">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-eyebrow">Features</div>
+      <h2 class="section-title">Everything a group needs</h2>
+      <p class="section-sub">Built for real shared expenses — from weekend trips to long-term flatmates.</p>
+    </div>
+
+    <div class="features-grid">
+
+      <div class="feature-card reveal" data-accent="salmon">
+        <span class="feature-icon">&#128101;</span>
+        <h3>Group Management</h3>
+        <p>Create and manage multiple groups for any occasion — trips, homes, or recurring shared costs.</p>
+        <ul>
+          <li>Create groups with a name and icon</li>
+          <li>Invite members instantly via a simple group code</li>
+          <li>Admin &amp; member roles with promotion support</li>
+          <li>Leave group — last admin must pass the role first</li>
         </ul>
-    </nav>
+      </div>
 
-    <!-- BREADCRUMB -->
-    <div class="breadcrumb">
-        <div class="breadcrumb-inner">
-            <a href="/spendly/">Spendly</a>
-            <span>›</span>
-            <a href="/spendly/#features">Features</a>
-            <span>›</span>
-            <strong>Split Tracker</strong>
+      <div class="feature-card reveal reveal-delay-1" data-accent="green">
+        <span class="feature-icon">&#9878;&#65039;</span>
+        <h3>Flexible Splits</h3>
+        <p>Every expense is different — split however makes sense for the situation.</p>
+        <ul>
+          <li>Equal split across all or selected members</li>
+          <li>Percentage-based split</li>
+          <li>Exact amount per person</li>
+          <li>Multi-payer support per expense</li>
+        </ul>
+      </div>
+
+      <div class="feature-card reveal reveal-delay-2" data-accent="blue">
+        <span class="feature-icon">&#9889;</span>
+        <h3>Real-Time Sync</h3>
+        <p>Powered by Supabase — all group members see changes the moment they happen, no manual refresh needed.</p>
+        <ul>
+          <li>Live updates for expenses and settlements</li>
+          <li>Always up-to-date balance summaries</li>
+          <li>Works across Android devices</li>
+        </ul>
+      </div>
+
+      <div class="feature-card reveal" data-accent="salmon">
+        <span class="feature-icon">&#128176;</span>
+        <h3>Settlement Tracking</h3>
+        <p>Track who has paid whom and watch balances settle in real time — no spreadsheet required.</p>
+        <ul>
+          <li>Record payments between any two members</li>
+          <li>Live balance summaries per person</li>
+          <li>Clear view of net owed vs. net receivable</li>
+        </ul>
+      </div>
+
+      <div class="feature-card reveal reveal-delay-1" data-accent="green">
+        <span class="feature-icon">&#128203;</span>
+        <h3>Activity Feed</h3>
+        <p>Full group history in one place — every expense, payment, and change, filtered the way you want.</p>
+        <ul>
+          <li>All / Mine / Payments tab views</li>
+          <li>"See all" full-screen paginated history</li>
+          <li>Timestamp and member context on every event</li>
+        </ul>
+      </div>
+
+      <div class="feature-card reveal reveal-delay-2" data-accent="blue">
+        <span class="feature-icon">&#128100;</span>
+        <h3>Profile Screen</h3>
+        <p>Your Split Tracker identity is separate from your local Spendly profile — customize it independently.</p>
+        <ul>
+          <li>Edit display name, phone, and profession</li>
+          <li>Set preferred currency for the group context</li>
+          <li>Add a short bio visible to group members</li>
+        </ul>
+      </div>
+
+      <!-- FEATURED: Privacy isolation -->
+      <div class="feature-card featured reveal" data-accent="salmon">
+        <div class="featured-left">
+          <span class="feature-icon">&#128274;</span>
+          <h3>Privacy-Isolated <span class="badge">By Design</span></h3>
+          <p>Split Tracker is a self-contained cloud module. Your personal transactions, budgets, accounts, and categories are stored exclusively on your device and are completely untouched by the cloud layer — even when Split Tracker is active.</p>
         </div>
+        <div class="featured-right">
+          <ul>
+            <li>Lazy initialization — no network connection opened until you deliberately enable Split Tracker</li>
+            <li>Cloud module lives in a separate package with no access to local Isar data</li>
+            <li>Disabling Split Tracker closes all network connections immediately</li>
+            <li>Personal finance data never leaves your device</li>
+            <li>No cross-contamination between local and cloud data</li>
+            <li>Opt-in, not opt-out — cloud only activates on your terms</li>
+          </ul>
+        </div>
+      </div>
+
     </div>
+  </div>
+</section>
 
-    <!-- HERO -->
-    <div class="hero">
-        <div class="hero-content">
-            <div class="hero-badge">☁️ Cloud Feature</div>
-            <h1>Split expenses.<br>Stay in sync.</h1>
-            <p>Spendly's Split Tracker brings Splitwise-style group expense tracking with real-time sync. Create groups, add shared expenses, and settle balances — all fully isolated from your private local finances.</p>
-            <div class="hero-cta">
-                <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" class="btn-primary" target="_blank" rel="noopener">
-                    ▶ Get on Google Play
-                </a>
-                <a href="/spendly/" class="btn-secondary">← Back to Spendly</a>
-            </div>
-            <div class="hero-stats">
-                <div class="stat">
-                    <span class="stat-value">Live</span>
-                    <span class="stat-label">Real-time sync</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value">3</span>
-                    <span class="stat-label">Split types</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value">0</span>
-                    <span class="stat-label">Local exposure</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value">Free</span>
-                    <span class="stat-label">To use</span>
-                </div>
-            </div>
-        </div>
+<hr class="divider">
 
-        <div class="hero-visual">
-            <div class="phone-wrap">
-                <div class="phone-frame">
-                    <div class="phone-screen">
-                        <div class="phone-topbar">
-                            <span class="phone-topbar-title">Split Tracker</span>
-                            <span class="phone-topbar-dot"></span>
-                        </div>
-                        <div class="phone-st-header">
-                            <span class="phone-st-title">My Groups</span>
-                            <span class="phone-st-btn">+ New</span>
-                        </div>
-                        <div class="phone-group-card">
-                            <div class="phone-group-avatar" style="background: rgba(224,139,106,0.18);">🏖️</div>
-                            <div class="phone-group-info">
-                                <div class="phone-group-name">Goa Trip</div>
-                                <div class="phone-group-meta">4 members · 6 expenses</div>
-                            </div>
-                            <div class="phone-group-balance owe">−₹840</div>
-                        </div>
-                        <div class="phone-group-card">
-                            <div class="phone-group-avatar" style="background: rgba(93,184,122,0.18);">🏠</div>
-                            <div class="phone-group-info">
-                                <div class="phone-group-name">Flat Expenses</div>
-                                <div class="phone-group-meta">3 members · 12 expenses</div>
-                            </div>
-                            <div class="phone-group-balance owed">+₹1,200</div>
-                        </div>
-                        <div class="phone-group-card">
-                            <div class="phone-group-avatar" style="background: rgba(107,163,214,0.18);">🍕</div>
-                            <div class="phone-group-info">
-                                <div class="phone-group-name">Friday Dinners</div>
-                                <div class="phone-group-meta">5 members · 3 expenses</div>
-                            </div>
-                            <div class="phone-group-balance settled">Settled</div>
-                        </div>
-                        <div class="phone-tabbar">
-                            <div class="phone-tab active">Groups<div class="phone-tab-dot"></div></div>
-                            <div class="phone-tab">Activity</div>
-                            <div class="phone-tab">Profile</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- ─── PRIVACY ─── -->
+<section id="privacy">
+  <div class="container">
+    <div class="privacy-highlight reveal">
+      <div class="icon-big">&#128737;&#65039;</div>
+      <div class="privacy-content">
+        <div class="section-eyebrow">Privacy First</div>
+        <h2 class="privacy-highlight h2" style="font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-0.03em;margin-bottom:12px;color:var(--text);">Your personal data never touches the cloud</h2>
+        <p style="font-size:16px;color:var(--muted);line-height:1.75;max-width:500px;">Split Tracker uses Supabase for real-time sync, but only for group-shared data you explicitly add to a group. Your transactions, budgets, accounts, and personal finances remain 100% local. The cloud module is lazily initialized — no network connection is opened until you actively launch Split Tracker for the first time.</p>
+        <div class="privacy-chips">
+          <span class="privacy-chip">Opt-in cloud</span>
+          <span class="privacy-chip">Lazy init</span>
+          <span class="privacy-chip">Isolated package</span>
+          <span class="privacy-chip">No local data sync</span>
+          <span class="privacy-chip">No tracking</span>
+          <span class="privacy-chip">Group data only</span>
         </div>
+      </div>
     </div>
+  </div>
+</section>
 
-    <hr class="divider">
+<hr class="divider">
 
-    <!-- HOW IT WORKS -->
-    <section id="how-it-works">
-        <div class="container">
-            <div class="section-label">How It Works</div>
-            <h2 class="section-title">Up and splitting in seconds</h2>
-            <p class="section-subtitle">No complicated onboarding. Create a group, share the code, start adding expenses.</p>
+<!-- ─── CTA ─── -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="section-eyebrow reveal">Get started</div>
+  <h2 class="section-title reveal">Ready to split smarter?</h2>
+  <p class="reveal">Download Spendly for free and start splitting expenses with your group — no setup friction, no spreadsheets.</p>
+  <div class="reveal">
+    <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" class="btn-primary" style="font-size:17px;padding:18px 36px;">&#9654; &nbsp;Download on Google Play</a>
+  </div>
+  <p class="cta-note reveal">Free · No ads on core features · Privacy first</p>
+</section>
 
-            <div class="steps-wrapper">
-                <div class="steps-grid">
-                    <div class="step-card">
-                        <span class="step-number">01</span>
-                        <span class="step-icon">👥</span>
-                        <h3>Create a group & invite</h3>
-                        <p>Start a group for a trip, flat, or any shared expense. Share the invite code with friends — they join instantly, no account friction.</p>
-                    </div>
-                    <div class="step-card">
-                        <span class="step-number">02</span>
-                        <span class="step-icon">➕</span>
-                        <h3>Add expenses your way</h3>
-                        <p>Log any shared expense and choose how to split it — equally, by exact amounts, or by percentage. Support for multiple payers per expense.</p>
-                    </div>
-                    <div class="step-card">
-                        <span class="step-number">03</span>
-                        <span class="step-icon">✅</span>
-                        <h3>Track balances & settle</h3>
-                        <p>See who owes what at a glance. Record settlements between members, watch balances update in real time, and clear the slate without awkward conversations.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- ─── FOOTER ─── -->
+<footer>
+  <a class="footer-brand" href="../../">
+    <div class="nav-icon" style="width:28px;height:28px;border-radius:8px;padding:0;overflow:hidden;"><img src="../../spendly.webp" alt="Spendly" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+    <span class="footer-brand-name">Spendly</span>
+  </a>
+  <div class="footer-links">
+    <a href="../../">&#8592; Back to Spendly</a>
+    <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" target="_blank" rel="noopener">Google Play</a>
+    <a href="../../privacy_policy.html">Privacy Policy</a>
+  </div>
+  <div class="footer-copy">&copy; <span id="year"></span> Tejnc. All rights reserved.</div>
+</footer>
 
-    <hr class="divider">
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
 
-    <!-- FEATURES -->
-    <section id="features">
-        <div class="container">
-            <div class="section-label">Features</div>
-            <h2 class="section-title">Everything a group needs</h2>
-            <p class="section-subtitle">Built for real shared expenses — from weekend trips to long-term flatmates.</p>
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+mobileMenu.querySelectorAll('.mobile-link').forEach(link => {
+  link.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  });
+});
 
-            <div class="features-grid">
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-                <div class="feature-card" data-accent="salmon">
-                    <span class="feature-icon">👥</span>
-                    <h3>Group Management</h3>
-                    <p>Create and manage multiple groups for any occasion — trips, homes, or recurring shared costs.</p>
-                    <ul>
-                        <li>Create groups with a name and icon</li>
-                        <li>Invite members instantly via a simple group code</li>
-                        <li>Admin & member roles with promotion support</li>
-                        <li>Leave group — last admin must pass the role first</li>
-                    </ul>
-                </div>
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-                <div class="feature-card" data-accent="green">
-                    <span class="feature-icon">⚖️</span>
-                    <h3>Flexible Splits</h3>
-                    <p>Every expense is different — split however makes sense for the situation.</p>
-                    <ul>
-                        <li>Equal split across all or selected members</li>
-                        <li>Percentage-based split</li>
-                        <li>Exact amount per person</li>
-                        <li>Multi-payer support per expense</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="blue">
-                    <span class="feature-icon">⚡</span>
-                    <h3>Real-Time Sync</h3>
-                    <p>Powered by Supabase — all group members see changes the moment they happen, no manual refresh needed.</p>
-                    <ul>
-                        <li>Live updates for expenses and settlements</li>
-                        <li>Always up-to-date balance summaries</li>
-                        <li>Works across Android devices</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="salmon">
-                    <span class="feature-icon">💰</span>
-                    <h3>Settlement Tracking</h3>
-                    <p>Track who has paid whom and watch balances settle in real time — no spreadsheet required.</p>
-                    <ul>
-                        <li>Record payments between any two members</li>
-                        <li>Live balance summaries per person</li>
-                        <li>Clear view of net owed vs. net receivable</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="green">
-                    <span class="feature-icon">📋</span>
-                    <h3>Activity Feed</h3>
-                    <p>Full group history in one place — every expense, payment, and change, filtered the way you want.</p>
-                    <ul>
-                        <li>All / Mine / Payments tab views</li>
-                        <li>"See all" full-screen paginated history</li>
-                        <li>Timestamp and member context on every event</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="blue">
-                    <span class="feature-icon">👤</span>
-                    <h3>Profile Screen</h3>
-                    <p>Your Split Tracker identity is separate from your local Spendly profile — customize it independently.</p>
-                    <ul>
-                        <li>Edit display name, phone, and profession</li>
-                        <li>Set preferred currency for the group context</li>
-                        <li>Add a short bio visible to group members</li>
-                    </ul>
-                </div>
-
-                <!-- FEATURED: Privacy isolation -->
-                <div class="feature-card featured" data-accent="salmon">
-                    <div class="featured-left">
-                        <span class="feature-icon">🔒</span>
-                        <h3>Privacy-Isolated <span class="badge">By Design</span></h3>
-                        <p>Split Tracker is a self-contained cloud module. Your personal transactions, budgets, accounts, and categories are stored exclusively on your device and are completely untouched by the cloud layer — even when Split Tracker is active.</p>
-                    </div>
-                    <div class="featured-right">
-                        <ul>
-                            <li>Lazy initialization — no network connection opened until you deliberately enable Split Tracker</li>
-                            <li>Cloud module lives in a separate package with no access to local Isar data</li>
-                            <li>Disabling Split Tracker closes all network connections immediately</li>
-                            <li>Personal finance data never leaves your device</li>
-                            <li>No cross-contamination between local and cloud data</li>
-                            <li>Opt-in, not opt-out — cloud only activates on your terms</li>
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <hr class="divider">
-
-    <!-- PRIVACY -->
-    <section id="privacy">
-        <div class="container">
-            <div class="privacy-highlight">
-                <div class="icon-big">🛡️</div>
-                <div class="privacy-content">
-                    <div class="section-label">Privacy First</div>
-                    <h2 class="section-title" style="font-size: 1.9rem;">Your personal data never touches the cloud</h2>
-                    <p>Split Tracker uses Supabase for real-time sync, but only for group-shared data you explicitly add to a group. Your transactions, budgets, accounts, and personal finances remain 100% local. The cloud module is lazily initialized — no network connection is opened until you actively launch Split Tracker for the first time.</p>
-                    <div class="privacy-pillars">
-                        <span class="pillar">Opt-in cloud</span>
-                        <span class="pillar">Lazy init</span>
-                        <span class="pillar">Isolated package</span>
-                        <span class="pillar">No local data sync</span>
-                        <span class="pillar">No tracking</span>
-                        <span class="pillar">Group data only</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <hr class="divider">
-
-    <!-- CTA -->
-    <section class="cta-section">
-        <div class="container">
-            <h2 class="section-title">Ready to split smarter?</h2>
-            <p>Download Spendly for free and start splitting expenses with your group — no setup friction, no spreadsheets.</p>
-            <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" class="btn-primary large" target="_blank" rel="noopener">
-                ▶ Download on Google Play
-            </a>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-logo">Spendly</div>
-        <div class="footer-tagline">Split Tracker — Real-time Group Expense Sharing</div>
-        <div class="footer-links">
-            <a href="/spendly/">← Back to Spendly</a>
-            <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" target="_blank" rel="noopener">Google Play</a>
-            <a href="/spendly/privacy_policy.html">Privacy Policy</a>
-        </div>
-        <div class="footer-copy">&copy; <span id="year"></span> Tejnc. All rights reserved.</div>
-    </footer>
-
-    <script>
-        document.getElementById('year').textContent = new Date().getFullYear();
-    </script>
-
+setTimeout(() => {
+  document.querySelectorAll('.hero-content .reveal, .hero-visual .reveal').forEach((el, i) => {
+    setTimeout(() => el.classList.add('visible'), i * 120);
+  });
+}, 100);
+</script>
 </body>
 </html>

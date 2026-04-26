@@ -1,719 +1,1459 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spendly - Personal Finance & Expense Tracker</title>
-    <meta name="description"
-        content="Track expenses with AI receipt scanning, budgets, split bills & more — all in one privacy-first app. No cloud. No account. Just your money.">
-    <meta property="og:title" content="Spendly - Personal Finance & Expense Tracker">
-    <meta property="og:description"
-        content="Track expenses with AI receipt scanning, budgets & bills — all in one private app.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tejnc.github.io/spendly">
-    <link rel="canonical" href="https://tejnc.github.io/spendly">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spendly — Personal Finance & Expense Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        :root {
-            --salmon:       #E08B6A;
-            --salmon-light: #F2A882;
-            --salmon-pale:  rgba(224, 139, 106, 0.15);
-            --salmon-glow:  rgba(224, 139, 106, 0.09);
-            --green:        #5DB87A;
-            --green-pale:   rgba(93, 184, 122, 0.15);
-            --bg:           #0e0c0a;
-            --bg-card:      #161412;
-            --bg-elevated:  #1E1B18;
-            --border:       rgba(255, 255, 255, 0.08);
-            --border-warm:  rgba(224, 139, 106, 0.22);
-            --text:         #F5F0EA;
-            --text-muted:   rgba(245, 240, 234, 0.5);
-            --text-dim:     rgba(245, 240, 234, 0.7);
-        }
+:root {
+  --salmon: #E08B6A;
+  --salmon-light: #F2A882;
+  --salmon-pale: rgba(224,139,106,0.12);
+  --bg: #0e0c0a;
+  --surface: #1E1B18;
+  --surface2: #272320;
+  --surface3: #2f2b27;
+  --text: #F5F0EA;
+  --muted: rgba(245,240,234,0.5);
+  --muted2: rgba(245,240,234,0.25);
+  --green: #5DB87A;
+  --green-pale: rgba(93,184,122,0.15);
+  --border: rgba(255,255,255,0.07);
+}
 
-        html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; }
 
-        body {
-            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: 3px; }
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px;
+  height: 68px;
+  background: rgba(14,12,10,0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--salmon); display: flex; align-items: center; justify-content: center;
+}
+.nav-icon svg { width: 18px; height: 18px; fill: white; }
+.nav-name { font-size: 18px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a { font-size: 15px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+.nav-cta {
+  background: var(--salmon); color: white;
+  font-size: 14px; font-weight: 600;
+  padding: 10px 22px; border-radius: 40px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.nav-cta:hover { opacity: 0.85; }
+.nav-hamburger {
+  display: none; flex-direction: column; justify-content: center; gap: 5px;
+  width: 36px; height: 36px; cursor: pointer; background: none; border: none; padding: 4px;
+}
+.nav-hamburger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--text); border-radius: 2px;
+  transition: transform 0.25s, opacity 0.25s;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        /* ── NAV ── */
-        nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            background: rgba(14, 12, 10, 0.88);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 0 2rem; height: 60px;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .nav-logo { font-size: 1.2rem; font-weight: 700; color: var(--salmon); letter-spacing: -0.03em; }
-        .nav-links { display: flex; gap: 2rem; list-style: none; }
-        .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
-        .nav-links a:hover { color: var(--salmon); }
+.mobile-menu {
+  display: none;
+  position: fixed; top: 68px; left: 0; right: 0; z-index: 99;
+  background: rgba(14,12,10,0.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  flex-direction: column;
+  padding: 16px 24px 24px;
+  gap: 4px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-size: 16px; font-weight: 500; color: var(--muted);
+  text-decoration: none; padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  transition: color 0.2s;
+}
+.mobile-menu a:last-child { border-bottom: none; }
+.mobile-menu a:hover { color: var(--text); }
+.mobile-menu .mobile-cta {
+  margin-top: 12px; text-align: center;
+  background: var(--salmon); color: white;
+  font-size: 15px; font-weight: 600;
+  padding: 14px; border-radius: 40px;
+  border-bottom: none;
+}
 
-        /* ── HERO ── */
-        .hero-glow {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            pointer-events: none; z-index: 0;
-            background:
-                radial-gradient(ellipse 55% 45% at 25% 15%, var(--salmon-glow) 0%, transparent 70%),
-                radial-gradient(ellipse 35% 35% at 75% 85%, rgba(93,184,122,0.05) 0%, transparent 70%);
-        }
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 0;
+  padding: 120px 80px 80px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-glow {
+  position: absolute; top: -200px; right: -100px;
+  width: 700px; height: 700px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(224,139,106,0.15) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero-glow2 {
+  position: absolute; bottom: -150px; left: -100px;
+  width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(93,184,122,0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero-left { max-width: 560px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--salmon-pale);
+  border: 1px solid rgba(224,139,106,0.25);
+  color: var(--salmon-light);
+  font-size: 13px; font-weight: 500;
+  padding: 7px 16px; border-radius: 40px;
+  margin-bottom: 32px;
+  letter-spacing: 0.04em;
+}
+.hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--salmon); }
+h1.hero-title {
+  font-size: clamp(52px, 6vw, 80px);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  text-wrap: balance;
+  margin-bottom: 24px;
+}
+h1.hero-title em { font-style: normal; color: var(--salmon); }
+.hero-sub {
+  font-size: 18px; font-weight: 400; line-height: 1.65;
+  color: var(--muted);
+  max-width: 440px;
+  margin-bottom: 40px;
+}
+.hero-actions { display: flex; align-items: center; gap: 16px; margin-bottom: 56px; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--salmon); color: white;
+  font-size: 15px; font-weight: 600;
+  padding: 14px 28px; border-radius: 50px;
+  text-decoration: none; transition: transform 0.15s, opacity 0.15s;
+}
+.btn-primary:hover { transform: translateY(-1px); opacity: 0.9; }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--muted);
+  font-size: 15px; font-weight: 500;
+  text-decoration: none; transition: color 0.2s;
+}
+.btn-ghost:hover { color: var(--text); }
+.btn-ghost svg { width: 16px; height: 16px; }
 
-        .hero {
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            gap: 4rem;
-            padding: 100px 5rem 4rem;
-            max-width: 1280px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-        .hero-content { display: flex; flex-direction: column; align-items: flex-start; }
-        .hero-badge {
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            background: var(--salmon-pale); border: 1px solid var(--border-warm);
-            color: var(--salmon); font-size: 0.75rem; font-weight: 600;
-            padding: 0.35rem 0.95rem; border-radius: 999px; margin-bottom: 2rem;
-            letter-spacing: 0.05em; text-transform: uppercase;
-        }
-        .hero h1 {
-            font-size: clamp(2.8rem, 5.5vw, 4.8rem); font-weight: 800;
-            letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 1.5rem;
-            background: linear-gradient(140deg, var(--text) 30%, var(--salmon) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .hero p {
-            font-size: 1.05rem; color: var(--text-dim); max-width: 480px;
-            margin-bottom: 2.5rem; line-height: 1.8; font-weight: 400;
-        }
-        .hero-cta { display: flex; gap: 0.85rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+.hero-stats { display: flex; gap: 32px; flex-wrap: wrap; }
+.hero-stat-item { display: flex; flex-direction: column; gap: 2px; }
+.hero-stat-num { font-size: 28px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+.hero-stat-label { font-size: 13px; color: var(--muted2); }
+.hero-stat-divider { width: 1px; background: var(--border); align-self: stretch; }
 
-        .btn-primary {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            background: var(--salmon); color: #0e0c0a;
-            text-decoration: none; font-weight: 700; font-size: 0.95rem;
-            padding: 0.8rem 1.75rem; border-radius: 12px; transition: all 0.2s;
-            letter-spacing: -0.01em;
-        }
-        .btn-primary:hover {
-            background: var(--salmon-light); transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(224, 139, 106, 0.32);
-        }
-        .btn-secondary {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            background: transparent; color: var(--text-dim); text-decoration: none;
-            font-weight: 500; font-size: 0.95rem; padding: 0.8rem 1.75rem;
-            border-radius: 12px; border: 1px solid var(--border); transition: all 0.2s;
-        }
-        .btn-secondary:hover { border-color: var(--border-warm); color: var(--salmon); }
+/* ─── PHONE MOCKUP ─── */
+.hero-right {
+  display: flex; justify-content: center; align-items: center;
+  position: relative;
+}
+@keyframes phoneHover {
+  0%, 100% {
+    transform: perspective(1200px) rotateY(-8deg) rotateX(2deg) translateY(0px);
+    filter: drop-shadow(0 60px 80px rgba(0,0,0,0.6));
+  }
+  50% {
+    transform: perspective(1200px) rotateY(-8deg) rotateX(2deg) translateY(-18px);
+    filter: drop-shadow(0 80px 100px rgba(0,0,0,0.45));
+  }
+}
+.phone-float {
+  position: relative;
+  animation: phoneHover 4s ease-in-out infinite;
+}
+.phone-frame {
+  width: 260px;
+  background: #1a1714;
+  border-radius: 40px;
+  padding: 10px;
+  border: 1.5px solid rgba(255,255,255,0.1);
+}
+.phone-screen {
+  background: #161412;
+  border-radius: 32px;
+  overflow: hidden;
+  aspect-ratio: 9/19.5;
+  display: flex; flex-direction: column;
+}
+.p-notch {
+  width: 90px; height: 22px;
+  background: #1a1714;
+  border-radius: 0 0 14px 14px;
+  margin: 0 auto; flex-shrink: 0;
+}
+.p-statusbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 2px 16px 6px; flex-shrink: 0;
+}
+.p-time { font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.7); }
+.p-icons { display: flex; gap: 4px; align-items: center; }
+.p-icons span { font-size: 8px; color: rgba(255,255,255,0.7); }
 
-        .hero-stats {
-            display: flex; background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
-        }
-        .stat { text-align: center; padding: 1rem 1.4rem; border-right: 1px solid var(--border); }
-        .stat:last-child { border-right: none; }
-        .stat-value { font-size: 1.45rem; font-weight: 800; color: var(--salmon); letter-spacing: -0.04em; display: block; line-height: 1.2; }
-        .stat-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; display: block; margin-top: 0.25rem; }
+.p-header { padding: 8px 14px 4px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+.p-header-title { font-size: 12px; font-weight: 600; color: var(--text); }
+.p-header-sub { font-size: 8px; color: var(--muted2); }
+.p-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--salmon-pale); border: 1.5px solid var(--salmon); display: flex; align-items: center; justify-content: center; font-size: 10px; }
 
-        /* ── PHONE MOCKUP ── */
-        .hero-visual { display: flex; align-items: center; justify-content: center; }
-        .phone-wrap {
-            width: 270px;
-            transform: perspective(1000px) rotateY(-8deg) rotateX(2deg);
-            transition: transform 0.5s ease;
-        }
-        .phone-wrap:hover { transform: perspective(1000px) rotateY(-3deg) rotateX(1deg); }
-        .phone-frame {
-            background: var(--bg-elevated);
-            border: 1.5px solid rgba(224,139,106,0.35);
-            border-radius: 36px; padding: 10px;
-            box-shadow:
-                0 48px 96px rgba(0,0,0,0.65),
-                0 0 0 1px rgba(255,255,255,0.04),
-                inset 0 1px 0 rgba(255,255,255,0.07);
-        }
-        .phone-screen { background: var(--bg-card); border-radius: 28px; overflow: hidden; padding-bottom: 14px; }
-        .phone-topbar {
-            background: #1a1714; padding: 13px 18px 11px;
-            display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid var(--border);
-        }
-        .phone-topbar-title { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
-        .phone-topbar-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--salmon); opacity: 0.75; }
-        .phone-balance-card {
-            margin: 14px 13px 12px;
-            background: linear-gradient(135deg, #272320 0%, #1E1B18 100%);
-            border: 1px solid rgba(224,139,106,0.18);
-            border-radius: 16px; padding: 14px;
-        }
-        .phone-balance-label { font-size: 0.58rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
-        .phone-balance-amount { font-size: 1.4rem; font-weight: 700; color: var(--text); letter-spacing: -0.03em; margin-bottom: 10px; }
-        .phone-balance-row { display: flex; gap: 7px; }
-        .phone-balance-pill { flex: 1; border-radius: 10px; padding: 7px 9px; font-size: 0.58rem; font-weight: 600; }
-        .phone-balance-pill.inc { background: rgba(93,184,122,0.18); color: #5DB87A; }
-        .phone-balance-pill.exp { background: rgba(224,139,106,0.18); color: var(--salmon); }
-        .phone-balance-pill span { display: block; font-size: 0.74rem; font-weight: 700; margin-top: 2px; }
-        .phone-txlist { padding: 0 13px; }
-        .phone-tx {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 8px 0; border-bottom: 1px solid var(--border);
-        }
-        .phone-tx:last-child { border-bottom: none; }
-        .phone-tx-left { display: flex; align-items: center; gap: 8px; }
-        .phone-tx-icon { width: 27px; height: 27px; border-radius: 8px; background: var(--bg-elevated); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; }
-        .phone-tx-name { font-size: 0.7rem; font-weight: 500; color: var(--text); }
-        .phone-tx-cat { font-size: 0.58rem; color: var(--text-muted); }
-        .phone-tx-amount { font-weight: 700; font-size: 0.72rem; }
-        .phone-tx-amount.neg { color: var(--salmon); }
-        .phone-tx-amount.pos { color: var(--green); }
-        .phone-tabbar {
-            margin: 12px 13px 0;
-            background: var(--bg-elevated); border-radius: 13px; padding: 7px 10px;
-            display: flex; justify-content: space-around; border: 1px solid var(--border);
-        }
-        .phone-tab { font-size: 0.56rem; color: var(--text-muted); text-align: center; font-weight: 500; padding: 2px 3px; }
-        .phone-tab.active { color: var(--salmon); }
-        .phone-tab-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--salmon); margin: 3px auto 0; }
+.p-balance-card {
+  margin: 6px 10px;
+  background: linear-gradient(135deg, #2a2420 0%, #1E1B18 100%);
+  border-radius: 14px; padding: 14px 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+.p-bal-label { font-size: 7px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted2); margin-bottom: 4px; }
+.p-bal-amount { font-size: 28px; font-weight: 700; color: white; line-height: 1; letter-spacing: -0.02em; }
+.p-bal-currency { font-size: 14px; font-weight: 400; color: var(--muted); vertical-align: super; }
+.p-bal-row { display: flex; gap: 12px; margin-top: 10px; }
+.p-bal-item { flex: 1; }
+.p-bal-item-label { font-size: 7px; color: var(--muted2); margin-bottom: 2px; }
+.p-bal-item-val { font-size: 11px; font-weight: 600; }
+.p-bal-item-val.income { color: var(--green); }
+.p-bal-item-val.expense { color: var(--salmon); }
 
-        /* ── SHARED SECTION STYLES ── */
-        section { padding: 6rem 2rem; }
-        .container { max-width: 1100px; margin: 0 auto; }
-        .section-label { font-size: 0.72rem; font-weight: 600; color: var(--salmon); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 0.75rem; }
-        .section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.04em; margin-bottom: 1rem; line-height: 1.15; }
-        .section-subtitle { font-size: 1rem; color: var(--text-dim); max-width: 520px; line-height: 1.8; font-weight: 400; }
+.p-mini-row { display: flex; gap: 6px; margin: 0 10px 6px; flex-shrink: 0; }
+.p-mini-card { flex: 1; background: var(--surface); border-radius: 10px; padding: 10px 10px; }
+.p-mini-label { font-size: 7px; color: var(--muted2); margin-bottom: 4px; letter-spacing: 0.06em; text-transform: uppercase; }
+.p-mini-val { font-size: 14px; font-weight: 700; color: white; }
+.p-mini-sub { font-size: 7px; color: var(--muted2); margin-top: 2px; }
 
-        /* ── FEATURE CARDS ── */
-        .features-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 1.25rem; margin-top: 3.5rem;
-        }
-        .feature-card {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 18px; padding: 1.75rem;
-            transition: all 0.25s; position: relative; overflow: hidden;
-        }
-        .feature-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            opacity: 0; transition: opacity 0.3s;
-        }
-        .feature-card[data-accent="salmon"]::before { background: linear-gradient(90deg, transparent, var(--salmon), transparent); }
-        .feature-card[data-accent="green"]::before  { background: linear-gradient(90deg, transparent, var(--green), transparent); }
-        .feature-card:hover { transform: translateY(-4px); }
-        .feature-card:hover::before { opacity: 1; }
-        .feature-card[data-accent="salmon"]:hover { border-color: rgba(224,139,106,0.25); box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 32px rgba(224,139,106,0.07); }
-        .feature-card[data-accent="green"]:hover  { border-color: rgba(93,184,122,0.25);  box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 32px rgba(93,184,122,0.07); }
+.p-section-label { font-size: 9px; font-weight: 600; color: var(--text); margin: 4px 10px 6px; flex-shrink: 0; letter-spacing: 0.04em; }
 
-        .feature-icon { font-size: 1.75rem; margin-bottom: 1rem; display: block; }
-        .feature-card[data-accent="salmon"] h3 { color: var(--salmon); }
-        .feature-card[data-accent="green"] h3  { color: var(--green); }
-        .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
-        .feature-card p { font-size: 0.875rem; color: var(--text-dim); line-height: 1.72; }
-        .feature-card ul { list-style: none; margin-top: 0.9rem; }
-        .feature-card ul li { font-size: 0.84rem; color: var(--text-dim); padding: 0.2rem 0; display: flex; align-items: flex-start; gap: 0.5rem; }
-        .feature-card[data-accent="salmon"] ul li::before { content: '›'; color: var(--salmon); font-weight: 700; flex-shrink: 0; }
-        .feature-card[data-accent="green"] ul li::before  { content: '›'; color: var(--green);  font-weight: 700; flex-shrink: 0; }
+.p-txn { display: flex; align-items: center; gap: 8px; padding: 7px 10px; flex-shrink: 0; }
+.p-txn + .p-txn { border-top: 1px solid rgba(255,255,255,0.04); }
+.p-txn-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+.p-txn-info { flex: 1; }
+.p-txn-name { font-size: 10px; font-weight: 500; color: var(--text); }
+.p-txn-cat { font-size: 8px; color: var(--muted2); }
+.p-txn-amount { font-size: 10px; font-weight: 600; }
+.p-txn-amount.neg { color: var(--salmon); }
+.p-txn-amount.pos { color: var(--green); }
 
-        /* FEATURED: Split Tracker */
-        .feature-card.featured {
-            grid-column: 1 / -1;
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 0; align-items: start;
-            background: linear-gradient(135deg, #1E1B18 0%, #161412 100%);
-            border-color: rgba(224,139,106,0.2); padding: 2.25rem;
-        }
-        .feature-card.featured::after {
-            content: ''; position: absolute; right: -80px; top: -80px;
-            width: 360px; height: 360px;
-            background: radial-gradient(circle, rgba(224,139,106,0.06) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .feature-card.featured h3 { font-size: 1.2rem; margin-bottom: 0.65rem; }
-        .feature-card.featured p { font-size: 0.9rem; max-width: 400px; }
-        .featured-right {
-            border-left: 1px solid var(--border);
-            padding-left: 2.25rem;
-        }
-        .featured-right ul li { font-size: 0.875rem; }
+.p-tabbar {
+  margin-top: auto; padding: 6px 0 10px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  display: flex; flex-shrink: 0;
+}
+.p-tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 6px; color: var(--muted2); }
+.p-tab.active { color: var(--salmon); }
+.p-tab svg { width: 14px; height: 14px; }
 
-        .badge {
-            display: inline-block; font-size: 0.58rem; font-weight: 700;
-            letter-spacing: 0.08em; text-transform: uppercase;
-            padding: 0.15rem 0.5rem; border-radius: 5px;
-            vertical-align: middle; margin-left: 0.4rem;
-            background: var(--salmon-pale); color: var(--salmon); border: 1px solid var(--border-warm);
-        }
-        .badge.green { background: var(--green-pale); color: var(--green); border-color: rgba(93,184,122,0.3); }
+/* floating badge on phone */
+.phone-badge {
+  position: absolute;
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+.phone-badge-left { top: 272px; left: -100px; }
+.phone-badge-right { top: 196px; right: -90px; }
+.pb-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.pb-label { font-size: 10px; color: var(--muted2); }
+.pb-val { font-size: 14px; font-weight: 700; color: var(--text); }
 
-        /* ── PRIVACY ── */
-        .privacy-highlight {
-            position: relative;
-            background: linear-gradient(135deg, #1E1B18 0%, #161412 100%);
-            border-radius: 24px; padding: 4rem 3rem;
-            display: flex; gap: 3rem; align-items: center; flex-wrap: wrap;
-            overflow: hidden;
-        }
-        .privacy-highlight::before {
-            content: ''; position: absolute; inset: 0; border-radius: 24px;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(224,139,106,0.3), rgba(255,255,255,0.05), rgba(93,184,122,0.12));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
-        }
-        .privacy-highlight::after {
-            content: ''; position: absolute; right: -60px; top: -60px;
-            width: 320px; height: 320px;
-            background: radial-gradient(circle, rgba(224,139,106,0.07) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .privacy-highlight .icon-big { font-size: 4.5rem; flex-shrink: 0; position: relative; z-index: 1; }
-        .privacy-content { flex: 1; min-width: 280px; position: relative; z-index: 1; }
-        .privacy-highlight h2 { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0.75rem; }
-        .privacy-highlight p { color: var(--text-dim); font-size: 1rem; line-height: 1.78; max-width: 500px; }
-        .privacy-pillars { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 1.5rem; }
-        .pillar {
-            background: var(--salmon-pale); border: 1px solid var(--border-warm);
-            color: var(--salmon); font-size: 0.78rem; font-weight: 600;
-            padding: 0.35rem 0.85rem; border-radius: 8px; letter-spacing: 0.01em;
-        }
+/* ─── SECTION COMMON ─── */
+section { padding: 100px 80px; }
+.section-eyebrow {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--salmon);
+  margin-bottom: 16px;
+}
+.section-title {
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 700; line-height: 1.1;
+  letter-spacing: -0.025em; color: var(--text);
+  text-wrap: balance;
+  margin-bottom: 20px;
+}
+.section-sub {
+  font-size: 18px; color: var(--muted);
+  max-width: 540px; line-height: 1.6;
+}
 
-        /* ── MINI GRID ── */
-        .mini-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 3.5rem; }
-        .mini-card {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 14px; padding: 1.25rem;
-            display: flex; align-items: flex-start; gap: 0.85rem;
-            transition: all 0.2s;
-        }
-        .mini-card:hover { border-color: rgba(255,255,255,0.12); background: var(--bg-elevated); }
-        .mini-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.05rem; }
-        .mini-card h4 { font-size: 0.875rem; font-weight: 600; margin-bottom: 0.2rem; color: var(--text); }
-        .mini-card p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; }
+/* ─── SOCIAL PROOF ─── */
+.social-proof {
+  padding: 40px 80px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 48px;
+  flex-wrap: wrap;
+}
+.sp-item { display: flex; align-items: center; gap: 12px; }
+.sp-icon { font-size: 24px; }
+.sp-label { font-size: 14px; font-weight: 500; color: var(--muted); }
+.sp-label strong { color: var(--text); font-weight: 700; }
+.sp-divider { width: 1px; height: 32px; background: var(--border); }
+.sp-stars { color: #F5C542; font-size: 14px; letter-spacing: 1px; }
 
-        .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+/* ─── HOW IT WORKS ─── */
+.how {
+  background: linear-gradient(180deg, var(--bg) 0%, #141210 100%);
+}
+.how-header { max-width: 600px; margin-bottom: 72px; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+.step {
+  background: var(--surface); padding: 40px 36px;
+  position: relative;
+  transition: background 0.2s;
+}
+.step:first-child { border-radius: 20px 0 0 20px; }
+.step:last-child { border-radius: 0 20px 20px 0; }
+.step:hover { background: var(--surface2); }
+.step-num {
+  font-size: 72px; font-weight: 800; letter-spacing: -0.04em;
+  color: rgba(224,139,106,0.12); line-height: 1;
+  margin-bottom: 20px;
+}
+.step-icon { font-size: 28px; margin-bottom: 16px; }
+.step-title { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+.step-desc { font-size: 15px; color: var(--muted); line-height: 1.6; }
 
-        /* ── CTA ── */
-        .cta-section {
-            padding: 6rem 2rem;
-            background: linear-gradient(135deg, #1E1B18 0%, #0e0c0a 100%);
-            text-align: center; position: relative; overflow: hidden;
-        }
-        .cta-section::before {
-            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 700px; height: 400px;
-            background: radial-gradient(ellipse, rgba(224,139,106,0.08) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .cta-section .container { position: relative; z-index: 1; }
-        .cta-section p { color: var(--text-dim); margin: 1rem auto 2.5rem; max-width: 460px; font-size: 1.05rem; }
-        .btn-primary.large { font-size: 1rem; padding: 1rem 2.5rem; border-radius: 14px; }
+/* ─── FEATURES ─── */
+.features { background: var(--bg); }
+.features-header { text-align: center; margin-bottom: 72px; }
+.features-header .section-sub { margin: 0 auto; }
+.feature-pillars { display: flex; flex-direction: column; gap: 80px; }
 
-        /* ── FOOTER ── */
-        footer { background: var(--bg-card); border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; }
-        .footer-logo { font-size: 1.5rem; font-weight: 800; color: var(--salmon); margin-bottom: 0.5rem; letter-spacing: -0.04em; }
-        .footer-tagline { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 2rem; }
-        .footer-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem; }
-        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
-        .footer-links a:hover { color: var(--salmon); }
-        .footer-copy { font-size: 0.78rem; color: var(--text-muted); }
+.pillar { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.pillar.reverse { direction: rtl; }
+.pillar.reverse > * { direction: ltr; }
 
-        /* ── RESPONSIVE ── */
-        @media (max-width: 960px) {
-            .features-grid { grid-template-columns: repeat(2, 1fr); }
-            .feature-card.featured { grid-template-columns: 1fr; }
-            .featured-right { border-left: none; border-top: 1px solid var(--border); padding-left: 0; padding-top: 1.5rem; margin-top: 0.5rem; }
-        }
+.pillar-text {}
+.pillar-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--salmon); margin-bottom: 14px; }
+.pillar-title { font-size: 38px; font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: var(--text); margin-bottom: 16px; }
+.pillar-sub { font-size: 16px; color: var(--muted); line-height: 1.65; margin-bottom: 32px; }
+.pillar-features { display: flex; flex-direction: column; gap: 12px; }
+.pf-item { display: flex; align-items: flex-start; gap: 12px; }
+.pf-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--salmon); margin-top: 7px; flex-shrink: 0; }
+.pf-text { font-size: 15px; color: var(--muted); line-height: 1.5; }
+.pf-text strong { color: var(--text); font-weight: 500; }
 
-        @media (max-width: 800px) {
-            .hero { grid-template-columns: 1fr; padding: 100px 1.75rem 4rem; text-align: center; gap: 3rem; }
-            .hero-content { align-items: center; }
-            .hero p { max-width: 100%; }
-            .hero-visual { order: -1; }
-            .phone-wrap { width: 220px; transform: none; }
-            .phone-wrap:hover { transform: none; }
-        }
+.pillar-visual {
+  background: var(--surface);
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  padding: 32px;
+  min-height: 360px;
+  display: flex; flex-direction: column; gap: 12px;
+  position: relative;
+}
+.pillar-visual::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(224,139,106,0.4), transparent);
+}
 
-        @media (max-width: 640px) {
-            nav { padding: 0 1.25rem; }
-            .nav-links { gap: 1.25rem; }
-            section { padding: 4rem 1.25rem; }
-            .features-grid { grid-template-columns: 1fr; }
-            .privacy-highlight { padding: 2.5rem 1.75rem; flex-direction: column; gap: 1.5rem; }
-            .privacy-highlight .icon-big { font-size: 3.5rem; }
-            .hero-stats { width: 100%; }
-            .stat { flex: 1; padding: 0.85rem 0.5rem; }
-            .stat-value { font-size: 1.2rem; }
-        }
-    </style>
+/* Analytics visual */
+.chart-bar-row { display: flex; align-items: flex-end; gap: 8px; height: 120px; margin-bottom: 16px; }
+.chart-bar { flex: 1; border-radius: 6px 6px 0 0; min-width: 0; transition: height 0.3s; }
+.chart-labels { display: flex; gap: 8px; }
+.chart-label { flex: 1; text-align: center; font-size: 10px; color: var(--muted2); }
+
+.category-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.cat-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.cat-name { font-size: 12px; color: var(--muted); flex: 1; }
+.cat-bar-wrap { width: 80px; height: 4px; background: var(--surface2); border-radius: 2px; }
+.cat-bar-fill { height: 100%; border-radius: 2px; background: var(--salmon); }
+.cat-val { font-size: 12px; font-weight: 600; color: var(--text); width: 40px; text-align: right; }
+
+/* Split visual */
+.split-group-card { background: var(--surface2); border-radius: 14px; padding: 16px 18px; margin-bottom: 8px; }
+.sg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.sg-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.sg-badge { font-size: 10px; background: var(--green-pale); color: var(--green); padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.sg-members { display: flex; gap: -4px; margin-bottom: 10px; }
+.sg-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--surface3); border: 2px solid var(--surface2); margin-right: -6px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--text); font-weight: 600; }
+.sg-balance-row { display: flex; justify-content: space-between; align-items: center; }
+.sg-bal-label { font-size: 10px; color: var(--muted2); }
+.sg-bal-val { font-size: 16px; font-weight: 700; }
+.sg-bal-val.owe { color: var(--salmon); }
+.sg-bal-val.owed { color: var(--green); }
+
+.split-expense { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--surface); border-radius: 10px; margin-bottom: 6px; border: 1px solid var(--border); }
+.se-icon { font-size: 18px; }
+.se-info { flex: 1; }
+.se-name { font-size: 12px; font-weight: 500; color: var(--text); }
+.se-payer { font-size: 10px; color: var(--muted2); }
+.se-amount { font-size: 14px; font-weight: 700; color: var(--text); }
+
+/* Budget visual */
+.budget-item { margin-bottom: 16px; }
+.budget-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.budget-name { font-size: 13px; font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.budget-icon { font-size: 16px; }
+.budget-vals { font-size: 12px; color: var(--muted2); }
+.budget-track { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.budget-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+.budget-fill.ok { background: var(--green); }
+.budget-fill.warn { background: #F5C542; }
+.budget-fill.over { background: var(--salmon); }
+
+/* AI receipt visual */
+.receipt-card { background: var(--surface2); border-radius: 14px; padding: 18px; }
+.receipt-scan-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.receipt-placeholder { width: 64px; height: 80px; background: var(--surface3); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; border: 1px dashed rgba(255,255,255,0.1); }
+.receipt-scan-info { flex: 1; }
+.receipt-scan-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.receipt-scan-sub { font-size: 11px; color: var(--muted2); margin-bottom: 10px; }
+.receipt-ai-badge { display: inline-flex; align-items: center; gap: 5px; background: var(--salmon-pale); color: var(--salmon-light); font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(224,139,106,0.2); }
+.receipt-field { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.receipt-field:last-child { border-bottom: none; }
+.rf-label { font-size: 11px; color: var(--muted2); }
+.rf-val { font-size: 12px; font-weight: 600; color: var(--text); }
+.rf-val .ai-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--salmon); margin-left: 6px; vertical-align: middle; }
+
+/* ─── SPLIT SPOTLIGHT ─── */
+.split-spotlight {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 100px 80px;
+}
+.split-inner {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+.split-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--green-pale); border: 1px solid rgba(93,184,122,0.25);
+  color: var(--green); font-size: 12px; font-weight: 600;
+  padding: 6px 16px; border-radius: 40px; letter-spacing: 0.06em;
+  text-transform: uppercase; margin-bottom: 24px;
+}
+.split-title { font-size: clamp(36px, 3.5vw, 52px); font-weight: 700; line-height: 1.1; letter-spacing: -0.025em; color: var(--text); margin-bottom: 20px; }
+.split-sub { font-size: 17px; color: var(--muted); line-height: 1.65; margin-bottom: 36px; }
+.split-bullets { display: flex; flex-direction: column; gap: 14px; margin-bottom: 40px; }
+.sb-item { display: flex; align-items: flex-start; gap: 12px; }
+.sb-check { width: 20px; height: 20px; border-radius: 50%; background: var(--green-pale); border: 1px solid rgba(93,184,122,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.sb-check svg { width: 10px; height: 10px; stroke: var(--green); fill: none; stroke-width: 2.5; }
+.sb-text { font-size: 15px; color: var(--muted); line-height: 1.5; }
+.sb-text strong { color: var(--text); font-weight: 500; }
+
+.split-visual-wrap {
+  background: var(--bg); border-radius: 24px;
+  border: 1px solid var(--border); padding: 28px;
+}
+.sv-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 16px; }
+.sv-group { background: var(--surface); border-radius: 14px; padding: 18px; margin-bottom: 12px; }
+.sv-group-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.sv-group-name { font-size: 15px; font-weight: 600; color: var(--text); }
+.sv-group-members { font-size: 11px; color: var(--muted2); }
+.sv-live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 3px var(--green-pale); animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.sv-balances { display: flex; flex-direction: column; gap: 8px; }
+.sv-balance-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--surface2); border-radius: 8px; }
+.sv-person { font-size: 12px; color: var(--text); flex: 1; font-weight: 500; }
+.sv-amount-tag { font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 20px; }
+.sv-amount-tag.owe { background: rgba(224,139,106,0.12); color: var(--salmon); }
+.sv-amount-tag.gets { background: var(--green-pale); color: var(--green); }
+.sv-amount-tag.settled { background: rgba(255,255,255,0.05); color: var(--muted2); }
+.sv-settle-btn {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--salmon); color: white;
+  font-size: 13px; font-weight: 600;
+  padding: 12px; border-radius: 10px;
+  margin-top: 12px; cursor: pointer;
+  border: none; width: 100%;
+}
+
+/* ─── PRIVACY ─── */
+.privacy { background: var(--bg); }
+.privacy-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.privacy-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 36px; }
+.privacy-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--muted); font-size: 13px; font-weight: 500;
+  padding: 10px 18px; border-radius: 40px;
+}
+.privacy-chip svg { width: 14px; height: 14px; stroke: var(--salmon); fill: none; stroke-width: 2; }
+.privacy-visual {
+  background: var(--surface); border-radius: 24px;
+  border: 1px solid var(--border); padding: 40px;
+  display: flex; flex-direction: column; gap: 20px;
+}
+.pv-lock-icon {
+  width: 56px; height: 56px; background: var(--salmon-pale);
+  border-radius: 16px; display: flex; align-items: center; justify-content: center;
+  font-size: 28px; margin-bottom: 8px;
+  border: 1px solid rgba(224,139,106,0.2);
+}
+.pv-title { font-size: 24px; font-weight: 700; color: var(--text); }
+.pv-sub { font-size: 15px; color: var(--muted); line-height: 1.6; }
+.pv-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+.pv-stat { background: var(--surface2); border-radius: 14px; padding: 18px; }
+.pv-stat-num { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; color: var(--text); }
+.pv-stat-label { font-size: 12px; color: var(--muted2); margin-top: 2px; }
+
+/* ─── CTA ─── */
+.cta-section {
+  background: var(--surface); padding: 100px 80px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.cta-glow {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(224,139,106,0.1) 0%, transparent 65%);
+  pointer-events: none;
+}
+.cta-section .section-title { margin: 0 auto 16px; }
+.cta-section .section-sub { margin: 0 auto 40px; text-align: center; }
+.cta-actions { display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; }
+.cta-note { font-size: 13px; color: var(--muted2); margin-top: 20px; }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--bg); padding: 40px 80px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 20px;
+}
+.footer-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.footer-brand-name { font-size: 16px; font-weight: 600; color: var(--muted); }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { font-size: 13px; color: var(--muted2); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--muted); }
+.footer-copy { font-size: 13px; color: var(--muted2); }
+
+/* ─── SCROLL ANIMATIONS ─── */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  nav { padding: 0 24px; }
+  nav .nav-links { display: none; }
+  nav .nav-cta { display: none; }
+  .nav-hamburger { display: flex; }
+  .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; gap: 60px; }
+  .hero-right { display: none; }
+  section { padding: 72px 24px; }
+  .social-proof { padding: 32px 24px; gap: 24px; }
+  .steps { grid-template-columns: 1fr; gap: 2px; }
+  .step:first-child { border-radius: 20px 20px 0 0; }
+  .step:last-child { border-radius: 0 0 20px 20px; }
+  .pillar, .pillar.reverse, .split-inner, .privacy-inner { grid-template-columns: 1fr; direction: ltr; gap: 48px; }
+  footer { padding: 32px 24px; }
+  .split-spotlight { padding: 72px 24px; }
+}
+</style>
 </head>
-
 <body>
 
-    <div class="hero-glow"></div>
+<!-- ─── NAV ─── -->
+<nav>
+  <a class="nav-brand" href="#">
+    <div class="nav-icon" style="padding:0;overflow:hidden;"><img src="spendly.webp" alt="Spendly" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+    <span class="nav-name">Spendly</span>
+  </a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#split">Split Tracker</a>
+    <a href="#privacy">Privacy</a>
+    <a href="privacy_policy.html">Privacy Policy</a>
+  </div>
+  <a class="nav-cta" href="https://play.google.com/store/apps/details?id=com.tejnc.spendly">&#9654; Get on Google Play</a>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
-    <!-- NAV -->
-    <nav>
-        <span class="nav-logo">Spendly</span>
-        <ul class="nav-links">
-            <li><a href="#features">Features</a></li>
-            <li><a href="#privacy">Privacy</a></li>
-            <li><a href="privacy_policy.html">Privacy Policy</a></li>
-        </ul>
-    </nav>
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#features" class="mobile-link">Features</a>
+  <a href="#split" class="mobile-link">Split Tracker</a>
+  <a href="#privacy" class="mobile-link">Privacy</a>
+  <a href="privacy_policy.html" class="mobile-link">Privacy Policy</a>
+  <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" class="mobile-cta">&#9654; &nbsp;Free on Google Play</a>
+</div>
 
-    <!-- HERO -->
-    <div class="hero">
-        <div class="hero-content">
-            <div class="hero-badge">📱 Available on Google Play</div>
-            <h1>Your money.<br>Your rules.</h1>
-            <p>Spendly is a smart, beautiful, privacy-first personal finance app. Track expenses, scan receipts with AI, split bills with friends, set budgets, earn achievements — all stored locally on your device. No account needed.</p>
-            <div class="hero-cta">
-                <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" class="btn-primary" target="_blank" rel="noopener">
-                    ▶ Get on Google Play
-                </a>
-                <a href="#features" class="btn-secondary">Explore features ↓</a>
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="hero-left">
+    <div class="hero-badge reveal">
+      <span class="hero-badge-dot"></span>
+      Now available on Google Play
+    </div>
+    <h1 class="hero-title reveal reveal-delay-1">Your money.<br><em>Your rules.</em></h1>
+    <p class="hero-sub reveal reveal-delay-2">A smart, beautiful, privacy-first finance app. Track expenses, scan receipts with AI, split bills with friends — everything stored locally on your device.</p>
+    <div class="hero-actions reveal reveal-delay-3">
+      <a class="btn-primary" href="https://play.google.com/store/apps/details?id=com.tejnc.spendly">&#9654; &nbsp;Free on Google Play</a>
+      <a class="btn-ghost" href="#features">
+        Explore features
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3l5 5-5 5M3 8h10"/></svg>
+      </a>
+    </div>
+    <div class="hero-stats reveal">
+      <div class="hero-stat-item">
+        <span class="hero-stat-num">100%</span>
+        <span class="hero-stat-label">Local &amp; private</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-num">0</span>
+        <span class="hero-stat-label">Accounts needed</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-num">AI</span>
+        <span class="hero-stat-label">Receipt scanning</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-num">Free</span>
+        <span class="hero-stat-label">To download</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right reveal">
+    <div class="phone-float">
+      <!-- floating badges -->
+      <div class="phone-badge phone-badge-left">
+        <div class="pb-icon" style="background:rgba(224,85,85,0.12)">&#9888;&#65039;</div>
+        <div>
+          <div class="pb-label">Monthly Budget</div>
+          <div class="pb-val" style="color:#E05555;">100% used</div>
+        </div>
+      </div>
+      <div class="phone-badge phone-badge-right">
+        <div class="pb-icon" style="background:#2d1e0f">&#128293;</div>
+        <div>
+          <div class="pb-label">Streak</div>
+          <div class="pb-val">2 days</div>
+        </div>
+      </div>
+
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="p-notch"></div>
+
+          <!-- App header -->
+          <div style="display:flex;align-items:center;gap:8px;padding:6px 14px 4px;flex-shrink:0;">
+            <div style="width:26px;height:26px;border-radius:50%;background:#3a3028;border:1.5px solid var(--salmon);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text);">T</div>
+            <div style="font-size:13px;font-weight:700;color:white;flex:1;letter-spacing:-0.01em;">Spendly</div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" width="14" height="14"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" width="14" height="14" style="margin-left:6px"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          </div>
+
+          <!-- Balance card -->
+          <div style="margin:4px 10px 6px;background:#1e1b18;border-radius:14px;padding:12px 14px;flex-shrink:0;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <div style="font-size:7px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);">TOTAL BALANCE</div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" width="11" height="11"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </div>
-            <div class="hero-stats">
-                <div class="stat">
-                    <span class="stat-value">100%</span>
-                    <span class="stat-label">Local data</span>
+            <div style="font-size:22px;font-weight:800;color:white;letter-spacing:-0.02em;margin-bottom:8px;">&#8377;83,996.65</div>
+            <div style="display:flex;gap:6px;">
+              <div style="flex:1;background:#272320;border-radius:8px;padding:8px 10px;">
+                <div style="font-size:6.5px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:3px;">INCOME</div>
+                <div style="display:flex;align-items:center;gap:3px;">
+                  <span style="color:#5DB87A;font-size:10px;">&#8595;</span>
+                  <span style="font-size:9px;font-weight:700;color:white;">&#8377;2,10,500</span>
                 </div>
-                <div class="stat">
-                    <span class="stat-value">0</span>
-                    <span class="stat-label">Accounts needed</span>
+              </div>
+              <div style="flex:1;background:#272320;border-radius:8px;padding:8px 10px;">
+                <div style="font-size:6.5px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:3px;">EXPENSE</div>
+                <div style="display:flex;align-items:center;gap:3px;">
+                  <span style="color:#E08B6A;font-size:10px;">&#8593;</span>
+                  <span style="font-size:9px;font-weight:700;color:white;">&#8377;1,33,812</span>
                 </div>
-                <div class="stat">
-                    <span class="stat-value">AI</span>
-                    <span class="stat-label">Receipt scan</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value">Free</span>
-                    <span class="stat-label">To download</span>
-                </div>
+              </div>
             </div>
+          </div>
+
+          <!-- Streak card -->
+          <div style="margin:0 10px 6px;background:#1e1b18;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
+            <div style="width:30px;height:30px;border-radius:9px;background:#2d1e0f;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">&#128293;</div>
+            <div style="flex:1;">
+              <div style="font-size:11px;font-weight:700;color:white;">2 Day Streak</div>
+              <div style="font-size:8px;color:rgba(255,255,255,0.4);">10 / 23 achievements unlocked</div>
+            </div>
+            <div style="background:#3a2e10;border:1px solid rgba(245,197,66,0.3);color:#F5C542;font-size:8px;font-weight:600;padding:3px 8px;border-radius:20px;">Best: 5</div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" width="10" height="10"><path d="M9 18l6-6-6-6"/></svg>
+          </div>
+
+          <!-- Monthly Budgets -->
+          <div style="margin:0 10px 6px;background:#1e1b18;border-radius:12px;padding:10px 12px;flex-shrink:0;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <div style="font-size:11px;font-weight:600;color:white;">Monthly Budgets</div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" width="10" height="10"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+            <div style="height:4px;background:#272320;border-radius:2px;overflow:hidden;margin-bottom:6px;">
+              <div style="width:100%;height:100%;background:#E05555;border-radius:2px;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+              <div style="font-size:8px;color:#E05555;font-weight:600;">&#8377;43,274 of &#8377;20,000</div>
+              <div style="font-size:8px;color:#E05555;font-weight:700;">100%</div>
+            </div>
+          </div>
+
+          <!-- Split Tracker -->
+          <div style="margin:0 10px 2px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+            <div style="font-size:11px;font-weight:600;color:white;">Split Tracker</div>
+            <div style="font-size:9px;color:#4ECBA8;font-weight:600;">Open</div>
+          </div>
+          <div style="margin:4px 10px 6px;background:#1e1b18;border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
+            <div style="width:28px;height:28px;border-radius:8px;background:#1a2e28;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#4ECBA8" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:10px;font-weight:600;color:white;">Split Tracker</div>
+              <div style="font-size:8px;color:rgba(255,255,255,0.35);">Tap to view your groups</div>
+            </div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="2" width="10" height="10"><path d="M9 18l6-6-6-6"/></svg>
+          </div>
+
+          <!-- Actions -->
+          <div style="margin:0 10px 4px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+            <div style="font-size:11px;font-weight:600;color:white;">Actions</div>
+            <div style="font-size:9px;color:#4ECBA8;font-weight:600;">See More</div>
+          </div>
+          <div style="margin:0 10px 6px;display:flex;gap:6px;flex-shrink:0;">
+            <div style="flex:1;background:#1e1b18;border-radius:10px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" width="14" height="14"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6"/></svg>
+              <div style="font-size:7px;color:rgba(255,255,255,0.5);">Split Bill</div>
+            </div>
+            <div style="flex:1;background:#1e1b18;border-radius:10px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>
+              <div style="font-size:7px;color:rgba(255,255,255,0.5);">Expense</div>
+            </div>
+            <div style="flex:1;background:#1e1b18;border-radius:10px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+              <div style="font-size:7px;color:rgba(255,255,255,0.5);">Income</div>
+            </div>
+            <div style="flex:1;background:#1e1b18;border-radius:10px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" width="14" height="14"><path d="M5 12h14M15 7l5 5-5 5M19 12H5"/></svg>
+              <div style="font-size:7px;color:rgba(255,255,255,0.5);">Transfer</div>
+            </div>
+          </div>
+
+          <!-- Tab bar -->
+          <div class="p-tabbar" style="padding:6px 0 12px;">
+            <div class="p-tab" style="color:#4ECBA8;">
+              <div style="background:#1a2e28;border-radius:20px;padding:4px 10px;display:flex;align-items:center;gap:4px;">
+                <svg viewBox="0 0 24 24" fill="#4ECBA8" width="12" height="12"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                <span style="font-size:8px;font-weight:600;">Home</span>
+              </div>
+            </div>
+            <div class="p-tab">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 5v14M5 12h14"/><circle cx="12" cy="12" r="10"/></svg>
+              <span style="font-size:7px;">Transactions</span>
+            </div>
+            <div class="p-tab">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+              <span style="font-size:7px;">Accounts</span>
+            </div>
+            <div class="p-tab">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+              <span style="font-size:7px;">Insights</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SOCIAL PROOF ─── -->
+<div class="social-proof">
+  <div class="sp-item">
+    <span class="sp-icon">&#9733;</span>
+    <div>
+      <div class="sp-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="sp-label"><strong>Rated 4.8</strong> on Google Play</div>
+    </div>
+  </div>
+  <div class="sp-divider"></div>
+  <div class="sp-item">
+    <span class="sp-icon">&#128229;</span>
+    <div class="sp-label"><strong>500+ downloads</strong> and growing</div>
+  </div>
+  <div class="sp-divider"></div>
+  <div class="sp-item">
+    <span class="sp-icon">&#128274;</span>
+    <div class="sp-label"><strong>Zero data harvesting</strong> — ever</div>
+  </div>
+  <div class="sp-divider"></div>
+  <div class="sp-item">
+    <span class="sp-icon">&#129302;</span>
+    <div class="sp-label"><strong>AI</strong> — offline OCR + cloud AI when connected</div>
+  </div>
+</div>
+
+<!-- ─── HOW IT WORKS ─── -->
+<section class="how" id="how">
+  <div class="how-header reveal">
+    <div class="section-eyebrow">How it works</div>
+    <h2 class="section-title">Up and running in 30 seconds</h2>
+    <p class="section-sub">No sign-up, no forms, no waiting. Download, open, and start tracking immediately.</p>
+  </div>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num">01</div>
+      <div class="step-icon">&#128229;</div>
+      <div class="step-title">Download for free</div>
+      <p class="step-desc">Install Spendly from Google Play. No account, no email, no credit card — just tap install and you're in.</p>
+    </div>
+    <div class="step reveal reveal-delay-1">
+      <div class="step-num">02</div>
+      <div class="step-icon">&#128179;</div>
+      <div class="step-title">Add your accounts</div>
+      <p class="step-desc">Set up your bank, cash, wallets and credit cards. All data lives on your device — never on our servers.</p>
+    </div>
+    <div class="step reveal reveal-delay-2">
+      <div class="step-num">03</div>
+      <div class="step-icon">&#128202;</div>
+      <div class="step-title">Track &amp; understand</div>
+      <p class="step-desc">Log transactions manually or snap a receipt with AI. Budgets, goals, and charts update in real time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FEATURES ─── -->
+<section class="features" id="features">
+  <div class="features-header reveal">
+    <div class="section-eyebrow">Features</div>
+    <h2 class="section-title">Everything you need,<br>nothing you don't</h2>
+    <p class="section-sub">Powerful tools designed for everyday finance — without the complexity of legacy apps.</p>
+  </div>
+
+  <div class="feature-pillars">
+
+    <!-- Pillar 1: Track -->
+    <div class="pillar reveal">
+      <div class="pillar-text">
+        <div class="pillar-eyebrow">Track</div>
+        <h3 class="pillar-title">Log every rupee with zero friction</h3>
+        <p class="pillar-sub">From daily chai to big-ticket purchases — Spendly makes recording transactions effortless, with custom categories, multi-account support, and a speed-dial FAB.</p>
+        <div class="pillar-features">
+          <div class="pf-item"><div class="pf-dot"></div><div class="pf-text"><strong>Expense, income &amp; transfer</strong> types with custom icons &amp; colors</div></div>
+          <div class="pf-item"><div class="pf-dot"></div><div class="pf-text"><strong>Multi-account management</strong> — bank, cash, e-wallets, credit cards</div></div>
+          <div class="pf-item"><div class="pf-dot"></div><div class="pf-text"><strong>Calendar view</strong> with heatmap and swipe navigation</div></div>
+          <div class="pf-item"><div class="pf-dot"></div><div class="pf-text"><strong>Recurring transactions</strong> — automate subscriptions and bills</div></div>
+        </div>
+      </div>
+      <div class="pillar-visual" style="gap:0;padding:24px;">
+
+        <!-- Header -->
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+          <div>
+            <div style="font-size:16px;font-weight:700;color:var(--text);">Financial Insights</div>
+            <div style="font-size:11px;color:var(--muted2);margin-top:2px;">April 2026 Analysis</div>
+          </div>
         </div>
 
-        <div class="hero-visual">
-            <div class="phone-wrap">
-                <div class="phone-frame">
-                    <div class="phone-screen">
-                        <div class="phone-topbar">
-                            <span class="phone-topbar-title">Dashboard</span>
-                            <span class="phone-topbar-dot"></span>
-                        </div>
-                        <div class="phone-balance-card">
-                            <div class="phone-balance-label">Total Balance</div>
-                            <div class="phone-balance-amount">₹1,24,580</div>
-                            <div class="phone-balance-row">
-                                <div class="phone-balance-pill inc">
-                                    Income<span>+₹45,000</span>
-                                </div>
-                                <div class="phone-balance-pill exp">
-                                    Expense<span>−₹18,240</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="phone-txlist">
-                            <div class="phone-tx">
-                                <div class="phone-tx-left">
-                                    <div class="phone-tx-icon">🛒</div>
-                                    <div>
-                                        <div class="phone-tx-name">Groceries</div>
-                                        <div class="phone-tx-cat">Food</div>
-                                    </div>
-                                </div>
-                                <span class="phone-tx-amount neg">−₹850</span>
-                            </div>
-                            <div class="phone-tx">
-                                <div class="phone-tx-left">
-                                    <div class="phone-tx-icon">💼</div>
-                                    <div>
-                                        <div class="phone-tx-name">Salary</div>
-                                        <div class="phone-tx-cat">Income</div>
-                                    </div>
-                                </div>
-                                <span class="phone-tx-amount pos">+₹45,000</span>
-                            </div>
-                            <div class="phone-tx">
-                                <div class="phone-tx-left">
-                                    <div class="phone-tx-icon">🚗</div>
-                                    <div>
-                                        <div class="phone-tx-name">Transport</div>
-                                        <div class="phone-tx-cat">Travel</div>
-                                    </div>
-                                </div>
-                                <span class="phone-tx-amount neg">−₹320</span>
-                            </div>
-                        </div>
-                        <div class="phone-tabbar">
-                            <div class="phone-tab active">Home<div class="phone-tab-dot"></div></div>
-                            <div class="phone-tab">Analytics</div>
-                            <div class="phone-tab">Splits</div>
-                            <div class="phone-tab">More</div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Monthly Expenses + Savings Rate row -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+          <!-- Monthly Expenses -->
+          <div style="background:var(--surface2);border-radius:12px;padding:14px;">
+            <div style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:6px;">Monthly Expenses</div>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+              <div style="background:var(--salmon);color:white;font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;">Exp</div>
+              <div style="background:var(--surface3);color:var(--muted2);font-size:9px;font-weight:600;padding:2px 8px;border-radius:4px;">Inc</div>
             </div>
+            <div style="display:inline-flex;align-items:center;gap:4px;background:rgba(93,184,122,0.15);border-radius:20px;padding:3px 8px;">
+              <span style="color:var(--green);font-size:9px;">&#8595;</span>
+              <span style="color:var(--green);font-size:9px;font-weight:600;">42% vs last period</span>
+            </div>
+          </div>
+          <!-- Savings Rate donut -->
+          <div style="background:var(--surface2);border-radius:12px;padding:14px;display:flex;align-items:center;gap:10px;">
+            <div>
+              <div style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:4px;">Savings Rate</div>
+              <div style="font-size:22px;font-weight:800;color:var(--text);letter-spacing:-0.02em;">44%</div>
+            </div>
+            <!-- SVG donut -->
+            <svg viewBox="0 0 36 36" width="48" height="48" style="flex-shrink:0;">
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#272320" stroke-width="4"/>
+              <circle cx="18" cy="18" r="14" fill="none" stroke="var(--salmon)" stroke-width="4"
+                stroke-dasharray="39 88" stroke-dashoffset="22" stroke-linecap="round"/>
+            </svg>
+          </div>
         </div>
+
+        <!-- Budget Insights -->
+        <div style="margin-bottom:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <div style="font-size:13px;font-weight:700;color:var(--text);">Budget Insights</div>
+            <div style="font-size:11px;color:#4ECBA8;font-weight:600;">View all</div>
+          </div>
+          <div style="background:var(--surface2);border-radius:12px;padding:14px;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;">
+              <span style="color:#F5C542;font-size:12px;">&#9888;</span>
+              <span style="font-size:11px;color:var(--muted);">1 budget approaching limit</span>
+            </div>
+            <!-- Bar chart -->
+            <div style="display:flex;align-items:flex-end;gap:12px;height:72px;margin-bottom:10px;padding:0 4px;position:relative;">
+              <div style="position:absolute;top:0;right:0;font-size:9px;color:var(--muted2);">100%</div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                <div style="width:36px;height:27px;background:#5DB87A;border-radius:5px 5px 0 0;"></div>
+                <div style="font-size:8px;color:var(--muted2);">Groceri&#8230;</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                <div style="width:36px;height:62px;background:#F5C542;border-radius:5px 5px 0 0;"></div>
+                <div style="font-size:8px;color:var(--muted2);">Shoppin&#8230;</div>
+              </div>
+            </div>
+            <!-- Progress bars -->
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#5DB87A;flex-shrink:0;"></div>
+              <div style="font-size:10px;color:var(--muted);flex:1;">Groceries</div>
+              <div style="flex:2;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;"><div style="width:38%;height:100%;background:#5DB87A;border-radius:2px;"></div></div>
+              <div style="font-size:10px;color:var(--muted2);width:24px;text-align:right;">38%</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#F5C542;flex-shrink:0;"></div>
+              <div style="font-size:10px;color:var(--muted);flex:1;">Shopping</div>
+              <div style="flex:2;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;"><div style="width:89%;height:100%;background:#F5C542;border-radius:2px;"></div></div>
+              <div style="font-size:10px;color:var(--muted2);width:24px;text-align:right;">89%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Daily Trend -->
+        <div style="margin-bottom:16px;">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;">Daily Trend</div>
+          <div style="background:var(--surface2);border-radius:12px;padding:14px;">
+            <div style="display:flex;gap:12px;margin-bottom:10px;">
+              <div style="display:flex;align-items:center;gap:5px;">
+                <div style="width:8px;height:8px;border-radius:50%;background:#E05555;"></div>
+                <span style="font-size:10px;color:var(--muted);">Expense</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:5px;">
+                <div style="width:8px;height:8px;border-radius:50%;background:#5DB87A;"></div>
+                <span style="font-size:10px;color:var(--muted);">Income</span>
+              </div>
+            </div>
+            <!-- Bars -->
+            <div style="display:flex;align-items:flex-end;gap:4px;height:60px;">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+                <div style="width:100%;height:18px;background:#E05555;border-radius:2px 2px 0 0;opacity:0.75;"></div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+                <div style="width:100%;height:12px;background:#E05555;border-radius:2px 2px 0 0;opacity:0.75;"></div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+                <div style="width:100%;height:24px;background:#E05555;border-radius:2px 2px 0 0;opacity:0.75;"></div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+                <div style="width:100%;height:9px;background:#E05555;border-radius:2px 2px 0 0;opacity:0.75;"></div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+                <div style="width:100%;height:21px;background:#E05555;border-radius:2px 2px 0 0;opacity:0.75;"></div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+                <div style="width:100%;height:15px;background:#E05555;border-radius:2px 2px 0 0;opacity:0.75;"></div>
+              </div>
+              <!-- Sunday: tall income -->
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+                <div style="width:100%;height:54px;background:#5DB87A;border-radius:2px 2px 0 0;"></div>
+              </div>
+            </div>
+            <div style="display:flex;margin-top:4px;">
+              <div style="flex:1;text-align:center;font-size:8px;color:var(--muted2);">M</div>
+              <div style="flex:1;text-align:center;font-size:8px;color:var(--muted2);">T</div>
+              <div style="flex:1;text-align:center;font-size:8px;color:var(--muted2);">W</div>
+              <div style="flex:1;text-align:center;font-size:8px;color:var(--muted2);">T</div>
+              <div style="flex:1;text-align:center;font-size:8px;color:var(--muted2);">F</div>
+              <div style="flex:1;text-align:center;font-size:8px;color:var(--muted2);">S</div>
+              <div style="flex:1;text-align:center;font-size:8px;color:#5DB87A;font-weight:600;">S</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spending Heatmap -->
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <div style="font-size:13px;font-weight:700;color:var(--text);">Spending Heatmap</div>
+            <div style="font-size:10px;color:var(--muted2);">April 2026</div>
+          </div>
+          <div style="background:var(--surface2);border-radius:12px;padding:12px;">
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">
+              <!-- Day labels -->
+              <div style="font-size:7px;color:var(--muted2);text-align:center;">S</div><div style="font-size:7px;color:var(--muted2);text-align:center;">M</div><div style="font-size:7px;color:var(--muted2);text-align:center;">T</div><div style="font-size:7px;color:var(--muted2);text-align:center;">W</div><div style="font-size:7px;color:var(--muted2);text-align:center;">T</div><div style="font-size:7px;color:var(--muted2);text-align:center;">F</div><div style="font-size:7px;color:var(--muted2);text-align:center;">S</div>
+              <!-- Week 1 -->
+              <div style="height:14px;border-radius:3px;background:var(--surface3);"></div>
+              <div style="height:14px;border-radius:3px;background:var(--surface3);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.3);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.5);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.2);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.6);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(93,184,122,0.4);"></div>
+              <!-- Week 2 -->
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.8);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.3);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.4);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.2);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.5);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.7);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(93,184,122,0.3);"></div>
+              <!-- Week 3 -->
+              <div style="height:14px;border-radius:3px;background:var(--surface3);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.4);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.6);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.3);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.9);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.4);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(93,184,122,0.5);"></div>
+              <!-- Week 4 -->
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.5);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.3);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.2);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.6);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,1.0);border:1px solid var(--salmon);"></div>
+              <div style="height:14px;border-radius:3px;background:rgba(224,139,106,0.3);"></div>
+              <div style="height:14px;border-radius:3px;background:var(--surface3);"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
 
-    <hr class="divider">
-
-    <!-- FEATURES -->
-    <section id="features">
-        <div class="container">
-            <div class="section-label">Features</div>
-            <h2 class="section-title">Everything you need to manage money</h2>
-            <p class="section-subtitle">Powerful features designed for everyday personal finance — without the complexity.</p>
-
-            <div class="features-grid">
-
-                <div class="feature-card" data-accent="salmon">
-                    <span class="feature-icon">📷</span>
-                    <h3>AI Receipt Scanning</h3>
-                    <p>Snap a photo of any receipt and let AI auto-fill the amount, date, and title — no manual entry required.</p>
-                    <ul>
-                        <li>Google ML Kit on-device OCR engine</li>
-                        <li>AI extraction layer for better accuracy</li>
-                        <li>Works fully offline — no image upload</li>
-                        <li>AI-refined results flagged with a badge</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="green">
-                    <span class="feature-icon">💸</span>
-                    <h3>Expense & Income Tracking</h3>
-                    <p>Log every transaction with full detail — categories, notes, images, and custom icons.</p>
-                    <ul>
-                        <li>Expense, income, and transfer types</li>
-                        <li>Custom categories with icons & colors</li>
-                        <li>Person & loan linking per transaction</li>
-                        <li>Speed-dial FAB for instant entry</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="salmon">
-                    <span class="feature-icon">💳</span>
-                    <h3>Multi-Account Management</h3>
-                    <p>Track all your accounts in one place — bank, cash, e-wallets, credit cards, and investments.</p>
-                    <ul>
-                        <li>Unlimited accounts</li>
-                        <li>Seamless transfers with auto balance updates</li>
-                        <li>Per-account transaction history</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="green">
-                    <span class="feature-icon">📊</span>
-                    <h3>Analytics & Insights</h3>
-                    <p>Understand your spending patterns with interactive charts and flexible date filters.</p>
-                    <ul>
-                        <li>Category-wise pie charts</li>
-                        <li>Income vs. expense bar chart trends</li>
-                        <li>Filter by Today / Week / Month / Custom</li>
-                        <li>Hide all amounts with one tap</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="green">
-                    <span class="feature-icon">🎯</span>
-                    <h3>Budgets & Savings Goals</h3>
-                    <p>Set weekly, monthly, or yearly category budgets and savings targets — track progress in real time.</p>
-                    <ul>
-                        <li>Per-category budget periods</li>
-                        <li>Goal progress with target amounts & deadlines</li>
-                        <li>Budget threshold notifications</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="salmon">
-                    <span class="feature-icon">🔄</span>
-                    <h3>Recurring Transactions</h3>
-                    <p>Automate subscriptions, bills, and any repeating transaction — processed automatically on app start.</p>
-                    <ul>
-                        <li>Daily, weekly, monthly, yearly schedules</li>
-                        <li>Auto-posts on schedule</li>
-                        <li>Skip individual occurrences</li>
-                    </ul>
-                </div>
-
-                <!-- FEATURED: Split Tracker -->
-                <div class="feature-card featured" data-accent="salmon">
-                    <div class="featured-left">
-                        <span class="feature-icon">🌐</span>
-                        <h3>Split Tracker <span class="badge">Cloud</span></h3>
-                        <p>Splitwise-style group expense tracking with real-time sync — privacy-isolated from your local data. Create groups, invite members with a simple code, and settle balances without awkward conversations.</p>
-                        <a href="feature/split_tracker/" style="display:inline-flex;align-items:center;gap:0.35rem;margin-top:1.25rem;font-size:0.85rem;font-weight:600;color:var(--salmon);text-decoration:none;border:1px solid var(--border-warm);padding:0.4rem 1rem;border-radius:8px;transition:all 0.2s;" onmouseover="this.style.background='var(--salmon-pale)'" onmouseout="this.style.background='transparent'">Learn more →</a>
-                    </div>
-                    <div class="featured-right">
-                        <ul>
-                            <li>Create groups, invite members instantly</li>
-                            <li>Equal, percentage, or exact splits</li>
-                            <li>Live balance summaries & settlement tracking</li>
-                            <li>Group activity feed with full history</li>
-                            <li>Multi-payer support per expense</li>
-                            <li>Real-time sync across all group members</li>
-                            <li>Isolated cloud module — personal data stays local</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="feature-card" data-accent="salmon">
-                    <span class="feature-icon">🧾</span>
-                    <h3>Bill Splitting <span class="badge">Local</span></h3>
-                    <p>Split expenses with friends locally using equal, percentage, or exact amounts — instantly.</p>
-                    <ul>
-                        <li>Equal, percentage, or exact split</li>
-                        <li>Smart settlement tracking flow</li>
-                        <li>Full history with per-person breakdowns</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="salmon">
-                    <span class="feature-icon">🤝</span>
-                    <h3>Loan Tracking</h3>
-                    <p>Keep tabs on money lent to or borrowed from contacts, with repayment history and overdue detection.</p>
-                    <ul>
-                        <li>Track lent & borrowed amounts</li>
-                        <li>Record partial repayments</li>
-                        <li>Active / Paid / Overdue status badges</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="salmon">
-                    <span class="feature-icon">📅</span>
-                    <h3>Calendar View</h3>
-                    <p>Navigate your transaction history visually with monthly and week views and an activity heatmap.</p>
-                    <ul>
-                        <li>Swipe left/right to navigate months</li>
-                        <li>Swipe up/down to toggle week view</li>
-                        <li>Color-coded activity heatmap per day</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="green">
-                    <span class="feature-icon">🏆</span>
-                    <h3>Achievements & Streaks</h3>
-                    <p>Stay motivated with gamification — earn badges for milestones and build your daily logging streak.</p>
-                    <ul>
-                        <li>Daily & longest streak counters</li>
-                        <li>Badges for savings goals, budget discipline & more</li>
-                        <li>App-wide achievement unlock animations</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card" data-accent="salmon">
-                    <span class="feature-icon">🔔</span>
-                    <h3>Smart Notifications</h3>
-                    <p>Stay on top of your finances with timely reminders, budget alerts, and a full notification history.</p>
-                    <ul>
-                        <li>Bill payment & budget threshold alerts</li>
-                        <li>Configurable daily logging reminder</li>
-                        <li>Notification history screen with read/clear</li>
-                    </ul>
-                </div>
-
+    <!-- Pillar 2: Scan -->
+    <div class="pillar reverse reveal">
+      <div class="pillar-text">
+        <div class="pillar-eyebrow">AI-Powered</div>
+        <h3 class="pillar-title">Snap a receipt. Done.</h3>
+        <p class="pillar-sub">Spendly uses Google ML Kit OCR with an AI extraction layer to auto-fill amounts, dates, and merchants from any receipt photo — all processed on-device, nothing uploaded.</p>
+        <div class="pillar-features">
+          <div class="pf-item"><div class="pf-dot"></div><div class="pf-text"><strong>On-device OCR</strong> via Google ML Kit — works fully offline</div></div>
+          <div class="pf-item"><div class="pf-dot"></div><div class="pf-text"><strong>AI extraction</strong> layer for higher accuracy across receipt formats</div></div>
+          <div class="pf-item"><div class="pf-dot"></div><div class="pf-text"><strong>AI-flagged badge</strong> so you always know what was auto-filled</div></div>
+          <div class="pf-item"><div class="pf-dot"></div><div class="pf-text"><strong>No image upload</strong> — your receipts never leave your phone</div></div>
+        </div>
+      </div>
+      <div class="pillar-visual">
+        <div class="receipt-card">
+          <div class="receipt-scan-row">
+            <div class="receipt-placeholder">&#129534;</div>
+            <div class="receipt-scan-info">
+              <div class="receipt-scan-title">Receipt detected</div>
+              <div class="receipt-scan-sub">AI extracted 4 fields automatically</div>
+              <div class="receipt-ai-badge">
+                <svg viewBox="0 0 12 12" fill="currentColor" width="10" height="10"><path d="M6 1l1.5 3H11l-2.5 2 1 3L6 7.5 3.5 9l1-3L2 4h3.5z"/></svg>
+                AI Refined
+              </div>
             </div>
+          </div>
+          <div class="receipt-field">
+            <div class="rf-label">Merchant</div>
+            <div class="rf-val">Reliance Fresh<span class="ai-dot"></span></div>
+          </div>
+          <div class="receipt-field">
+            <div class="rf-label">Amount</div>
+            <div class="rf-val">&#8377; 1,240.00<span class="ai-dot"></span></div>
+          </div>
+          <div class="receipt-field">
+            <div class="rf-label">Date</div>
+            <div class="rf-val">25 Apr 2026<span class="ai-dot"></span></div>
+          </div>
+          <div class="receipt-field">
+            <div class="rf-label">Category</div>
+            <div class="rf-val">&#128722; Groceries<span class="ai-dot"></span></div>
+          </div>
         </div>
-    </section>
-
-    <hr class="divider">
-
-    <!-- PRIVACY -->
-    <section id="privacy">
-        <div class="container">
-            <div class="privacy-highlight">
-                <div class="icon-big">🔒</div>
-                <div class="privacy-content">
-                    <div class="section-label">Privacy First</div>
-                    <h2 class="section-title" style="font-size: 1.9rem;">Your core data never leaves your device</h2>
-                    <p>Spendly requires no account, no sign-in, and no internet connection for core features. Every transaction, account, and budget is stored exclusively in your phone's local database using Isar — fast, encrypted, and 100% private. The optional cloud Split Tracker is fully isolated and only activates when you choose to enable it.</p>
-                    <div class="privacy-pillars">
-                        <span class="pillar">No cloud sync</span>
-                        <span class="pillar">No account required</span>
-                        <span class="pillar">No data mining</span>
-                        <span class="pillar">Offline first</span>
-                        <span class="pillar">Biometric lock</span>
-                        <span class="pillar">Encrypted backup</span>
-                    </div>
-                </div>
-            </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <div style="flex:1;background:var(--salmon);color:white;font-size:13px;font-weight:600;text-align:center;padding:12px;border-radius:10px;">Save Transaction</div>
+          <div style="background:var(--surface2);color:var(--muted);font-size:13px;text-align:center;padding:12px 16px;border-radius:10px;">Edit</div>
         </div>
-    </section>
+      </div>
+    </div>
 
-    <hr class="divider">
-
-    <!-- MORE -->
-    <section>
-        <div class="container">
-            <div class="section-label">More</div>
-            <h2 class="section-title">Designed for you</h2>
-            <p class="section-subtitle">Personalize the look, protect your data, manage contacts, and export whenever you need.</p>
-
-            <div class="mini-grid">
-                <div class="mini-card"><span class="mini-icon">🎨</span><div><h4>Dark & Light Themes</h4><p>Full dark/light/system mode with true-black OLED option.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">🌈</span><div><h4>8 Color Schemes</h4><p>Teal, Purple, Indigo, Pink, Coffee, Earthy, Wood, and more.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">🖼️</span><div><h4>Custom Category Icons</h4><p>Pick from Material icons or use your own gallery images.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">🔤</span><div><h4>5 Font Size Levels</h4><p>Scale all text from Small to XX-Large for your comfort.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">👆</span><div><h4>Biometric Lock</h4><p>Secure the app with Face ID or fingerprint authentication.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">📤</span><div><h4>Export to PDF & CSV</h4><p>Share or archive your transaction history and generate per-transaction receipts.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">💾</span><div><h4>Auto & Manual Backup</h4><p>Scheduled daily encrypted backups with configurable retention count.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">🏠</span><div><h4>Home Screen Widgets</h4><p>Budget, Quick Add, and Split Bill widgets right on your home screen.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">👤</span><div><h4>People & Contacts</h4><p>Manage financial contacts linked to transactions, loans, and splits.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">💱</span><div><h4>Multi-Currency</h4><p>Set your preferred currency for all transactions and reports.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">👁️</span><div><h4>Amounts Visibility Toggle</h4><p>Hide all monetary values across the app with a single tap.</p></div></div>
-                <div class="mini-card"><span class="mini-icon">⚡</span><div><h4>Blazing Fast</h4><p>Built on Isar — high-performance local database with instant queries.</p></div></div>
-            </div>
+    <!-- Pillar 3: Budget & Goals -->
+    <div class="pillar reveal">
+      <div class="pillar-text">
+        <div class="pillar-eyebrow">Budgets &amp; Goals</div>
+        <h3 class="pillar-title">Set targets. Stay on track.</h3>
+        <p class="pillar-sub">Create per-category budgets with weekly, monthly, or yearly periods. Set savings goals with deadlines and watch your progress in real time with threshold notifications.</p>
+        <div class="pillar-features">
+          <div class="pf-item"><div class="pf-dot"></div><div class="pf-text"><strong>Per-category budgets</strong> with flexible periods</div></div>
+          <div class="pf-item"><div class="pf-dot"></div><div class="pf-text"><strong>Savings goals</strong> with target amounts and deadlines</div></div>
+          <div class="pf-item"><div class="pf-dot"></div><div class="pf-text"><strong>Budget notifications</strong> when you're approaching limits</div></div>
+          <div class="pf-item"><div class="pf-dot"></div><div class="pf-text"><strong>Achievements &amp; streaks</strong> to keep you motivated daily</div></div>
         </div>
-    </section>
-
-    <hr class="divider">
-
-    <!-- CTA -->
-    <section class="cta-section">
-        <div class="container">
-            <h2 class="section-title">Start tracking smarter today</h2>
-            <p>No sign-up. No subscription. Download Spendly for free and take control of your finances.</p>
-            <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" class="btn-primary large" target="_blank" rel="noopener">
-                ▶ Download on Google Play
-            </a>
+      </div>
+      <div class="pillar-visual">
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px;">April Budgets</div>
+        <div class="budget-item">
+          <div class="budget-header">
+            <div class="budget-name"><span class="budget-icon">&#128722;</span> Groceries</div>
+            <div class="budget-vals">&#8377;3,200 / &#8377;5,000</div>
+          </div>
+          <div class="budget-track"><div class="budget-fill ok" style="width:64%"></div></div>
         </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-logo">Spendly</div>
-        <div class="footer-tagline">Personal Finance & Expense Tracker</div>
-        <div class="footer-links">
-            <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly" target="_blank" rel="noopener">Google Play</a>
-            <a href="privacy_policy.html">Privacy Policy</a>
-            <a href="app-ads.txt">app-ads.txt</a>
+        <div class="budget-item">
+          <div class="budget-header">
+            <div class="budget-name"><span class="budget-icon">&#127374;</span> Dining Out</div>
+            <div class="budget-vals">&#8377;3,600 / &#8377;4,000</div>
+          </div>
+          <div class="budget-track"><div class="budget-fill warn" style="width:90%"></div></div>
         </div>
-        <div class="footer-copy">&copy; <span id="year"></span> Tejnc. All rights reserved.</div>
-    </footer>
+        <div class="budget-item">
+          <div class="budget-header">
+            <div class="budget-name"><span class="budget-icon">&#127916;</span> Entertainment</div>
+            <div class="budget-vals">&#8377;2,100 / &#8377;1,500</div>
+          </div>
+          <div class="budget-track"><div class="budget-fill over" style="width:100%"></div></div>
+        </div>
+        <div class="budget-item">
+          <div class="budget-header">
+            <div class="budget-name"><span class="budget-icon">&#128663;</span> Transport</div>
+            <div class="budget-vals">&#8377;1,100 / &#8377;3,000</div>
+          </div>
+          <div class="budget-track"><div class="budget-fill ok" style="width:37%"></div></div>
+        </div>
+        <div style="margin-top:20px;background:var(--surface2);border-radius:14px;padding:16px;">
+          <div style="font-size:11px;color:var(--muted2);margin-bottom:8px;letter-spacing:0.06em;text-transform:uppercase;">Savings Goal</div>
+          <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;">Emergency Fund</div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted2);margin-bottom:8px;"><span>&#8377;42,000 saved</span><span>&#8377;1,00,000 target</span></div>
+          <div class="budget-track"><div class="budget-fill ok" style="width:42%"></div></div>
+          <div style="font-size:11px;color:var(--muted2);margin-top:6px;">&#127919; Target: December 2026</div>
+        </div>
+      </div>
+    </div>
 
-    <script>
-        document.getElementById('year').textContent = new Date().getFullYear();
-    </script>
+  </div>
+</section>
 
+<!-- ─── SPLIT SPOTLIGHT ─── -->
+<section class="split-spotlight" id="split">
+  <div class="split-inner">
+    <div class="reveal">
+      <div class="split-tag">
+        <div class="sv-live-dot"></div>
+        Live Cloud Feature
+      </div>
+      <h2 class="split-title">Split bills.<br>Skip the awkward chase.</h2>
+      <p class="split-sub">Spendly's Split Tracker is a Splitwise-style group expense module with real-time sync. Your personal finance data stays 100% local — only Split activates the cloud, and only when you choose.</p>
+      <div class="split-bullets">
+        <div class="sb-item">
+          <div class="sb-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="sb-text"><strong>Create groups, invite with a code</strong> — no account needed by default</div>
+        </div>
+        <div class="sb-item">
+          <div class="sb-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="sb-text"><strong>Equal, percentage, or exact splits</strong> with multi-payer support</div>
+        </div>
+        <div class="sb-item">
+          <div class="sb-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="sb-text"><strong>Real-time sync</strong> with live balance summaries for all members</div>
+        </div>
+        <div class="sb-item">
+          <div class="sb-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div class="sb-text"><strong>Privacy-isolated</strong> — personal transactions never touch the cloud</div>
+        </div>
+      </div>
+      <a class="btn-primary" href="feature/split_tracker/">Learn more about Split Tracker &#8594;</a>
+    </div>
+    <div class="split-visual-wrap reveal reveal-delay-1">
+      <div class="sv-title">&#127760; Split Tracker</div>
+      <div class="sv-group">
+        <div class="sv-group-header">
+          <div>
+            <div class="sv-group-name">Goa Trip &#127958;&#65039;</div>
+            <div class="sv-group-members">4 members · 8 expenses</div>
+          </div>
+          <div class="sv-live-dot"></div>
+        </div>
+        <div class="sv-balances">
+          <div class="sv-balance-row">
+            <div class="sv-person">You (Tej)</div>
+            <div class="sv-amount-tag gets">gets &#8377;1,240</div>
+          </div>
+          <div class="sv-balance-row">
+            <div class="sv-person">Rahul</div>
+            <div class="sv-amount-tag owe">owes &#8377;860</div>
+          </div>
+          <div class="sv-balance-row">
+            <div class="sv-person">Priya</div>
+            <div class="sv-amount-tag owe">owes &#8377;380</div>
+          </div>
+          <div class="sv-balance-row">
+            <div class="sv-person">Sudhakar</div>
+            <div class="sv-amount-tag settled">settled &#10003;</div>
+          </div>
+        </div>
+        <button class="sv-settle-btn">Settle Up &#8594;</button>
+      </div>
+      <div class="split-expense">
+        <div class="se-icon">&#127976;</div>
+        <div class="se-info">
+          <div class="se-name">Hotel — 2 nights</div>
+          <div class="se-payer">Paid by Tej · Split equally</div>
+        </div>
+        <div class="se-amount">&#8377;6,400</div>
+      </div>
+      <div class="split-expense">
+        <div class="se-icon">&#127843;</div>
+        <div class="se-info">
+          <div class="se-name">Dinner at Fisherman's</div>
+          <div class="se-payer">Paid by Rahul · Split equally</div>
+        </div>
+        <div class="se-amount">&#8377;3,200</div>
+      </div>
+      <div class="split-expense">
+        <div class="se-icon">&#128757;</div>
+        <div class="se-info">
+          <div class="se-name">Scooter rental</div>
+          <div class="se-payer">Paid by Priya · Exact split</div>
+        </div>
+        <div class="se-amount">&#8377;1,800</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PRIVACY ─── -->
+<section class="privacy" id="privacy">
+  <div class="privacy-inner">
+    <div class="reveal">
+      <div class="section-eyebrow">Privacy First</div>
+      <h2 class="section-title">Your data never leaves your device</h2>
+      <p class="section-sub">Spendly requires no account, no sign-in, and no internet connection for core features. Every transaction is stored in your phone's local database — fast, encrypted, and 100% private.</p>
+      <div class="privacy-chips">
+        <div class="privacy-chip">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          No cloud sync
+        </div>
+        <div class="privacy-chip">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93l14.14 14.14"/></svg>
+          No account required
+        </div>
+        <div class="privacy-chip">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          Biometric lock
+        </div>
+        <div class="privacy-chip">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Encrypted backup
+        </div>
+        <div class="privacy-chip">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93l14.14 14.14"/></svg>
+          No data mining
+        </div>
+        <div class="privacy-chip">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Offline first
+        </div>
+      </div>
+    </div>
+    <div class="privacy-visual reveal reveal-delay-1">
+      <div class="pv-lock-icon">&#128274;</div>
+      <div class="pv-title">Built private by design</div>
+      <div class="pv-sub">Spendly uses the Isar database — a high-performance, encrypted, local-only database. Your financial life stays on your phone, period.</div>
+      <div class="pv-stats">
+        <div class="pv-stat">
+          <div class="pv-stat-num">0</div>
+          <div class="pv-stat-label">Servers storing your data</div>
+        </div>
+        <div class="pv-stat">
+          <div class="pv-stat-num">0</div>
+          <div class="pv-stat-label">Accounts required</div>
+        </div>
+        <div class="pv-stat">
+          <div class="pv-stat-num" style="color:var(--green)">AES</div>
+          <div class="pv-stat-label">Encrypted local storage</div>
+        </div>
+        <div class="pv-stat">
+          <div class="pv-stat-num" style="color:var(--green)">&#10003;</div>
+          <div class="pv-stat-label">Works 100% offline</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DESIGNED FOR YOU ─── -->
+<section style="background:var(--surface);border-top:1px solid var(--border);padding:100px 80px;" id="more">
+  <div style="text-align:center;margin-bottom:64px;" class="reveal">
+    <div class="section-eyebrow">More</div>
+    <h2 class="section-title">Designed for you</h2>
+    <p class="section-sub" style="margin:0 auto;">Personalize the look, protect your data, manage contacts, and export whenever you need.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;" class="reveal">
+
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 20px;">
+      <div style="font-size:24px;margin-bottom:10px;">&#127912;</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;">Dark &amp; Light Themes</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.5;">Full dark/light/system mode with true-black OLED option.</div>
+    </div>
+
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 20px;">
+      <div style="font-size:24px;margin-bottom:10px;">&#127752;</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;">8 Color Schemes</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.5;">Teal, Purple, Indigo, Pink, Coffee, Earthy, Wood, and more.</div>
+    </div>
+
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 20px;">
+      <div style="font-size:24px;margin-bottom:10px;">&#128444;&#65039;</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;">Custom Category Icons</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.5;">Pick from Material icons or use your own gallery images.</div>
+    </div>
+
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 20px;">
+      <div style="font-size:24px;margin-bottom:10px;">&#128292;</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;">5 Font Size Levels</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.5;">Scale all text from Small to XX-Large for your comfort.</div>
+    </div>
+
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 20px;">
+      <div style="font-size:24px;margin-bottom:10px;">&#128070;</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;">Biometric Lock</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.5;">Secure the app with Face ID or fingerprint authentication.</div>
+    </div>
+
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 20px;">
+      <div style="font-size:24px;margin-bottom:10px;">&#128228;</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;">Export to PDF &amp; CSV</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.5;">Share or archive your transaction history and generate receipts.</div>
+    </div>
+
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 20px;">
+      <div style="font-size:24px;margin-bottom:10px;">&#128190;</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;">Auto &amp; Manual Backup</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.5;">Scheduled daily encrypted backups with configurable retention.</div>
+    </div>
+
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 20px;">
+      <div style="font-size:24px;margin-bottom:10px;">&#127968;</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;">Home Screen Widgets</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.5;">Budget, Quick Add, and Split Bill widgets on your home screen.</div>
+    </div>
+
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 20px;">
+      <div style="font-size:24px;margin-bottom:10px;">&#128100;</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;">People &amp; Contacts</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.5;">Manage financial contacts linked to transactions, loans, and splits.</div>
+    </div>
+
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 20px;">
+      <div style="font-size:24px;margin-bottom:10px;">&#128178;</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;">Multi-Currency</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.5;">Set your preferred currency for all transactions and reports.</div>
+    </div>
+
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 20px;">
+      <div style="font-size:24px;margin-bottom:10px;">&#128065;&#65039;</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;">Amounts Visibility Toggle</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.5;">Hide all monetary values across the app with a single tap.</div>
+    </div>
+
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 20px;">
+      <div style="font-size:24px;margin-bottom:10px;">&#9889;</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;">Blazing Fast</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.5;">Built on Isar — high-performance local database with instant queries.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── CTA ─── -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="section-eyebrow reveal">Get started</div>
+  <h2 class="section-title reveal">Start tracking smarter today</h2>
+  <p class="section-sub reveal">No sign-up. No subscription. Download Spendly for free and take control of your finances.</p>
+  <div class="cta-actions reveal">
+    <a class="btn-primary" style="font-size:17px;padding:18px 36px;" href="https://play.google.com/store/apps/details?id=com.tejnc.spendly">&#9654; &nbsp;Download on Google Play</a>
+  </div>
+  <p class="cta-note reveal">Free · No ads on core features · Privacy first</p>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <a class="footer-brand" href="#">
+    <div class="nav-icon" style="width:28px;height:28px;border-radius:8px;padding:0;overflow:hidden;"><img src="spendly.webp" alt="Spendly" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+    <span class="footer-brand-name">Spendly</span>
+  </a>
+  <div class="footer-links">
+    <a href="privacy_policy.html">Privacy Policy</a>
+    <a href="https://play.google.com/store/apps/details?id=com.tejnc.spendly">Google Play</a>
+    <a href="app-ads.txt">app-ads.txt</a>
+  </div>
+  <div class="footer-copy">&copy; Tejnc. All rights reserved.</div>
+</footer>
+
+<script>
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+mobileMenu.querySelectorAll('.mobile-link').forEach(link => {
+  link.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  });
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+setTimeout(() => {
+  document.querySelectorAll('.hero-left .reveal').forEach((el, i) => {
+    setTimeout(() => el.classList.add('visible'), i * 120);
+  });
+}, 100);
+</script>
 </body>
 </html>
